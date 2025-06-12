@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="background-color: #111; color: white; padding: 80px 0;" class="text-center">
+  <img src="{{ url_for('static', filename='images/White.png') }}" alt="Logo" style="height: 80px;">
+  <h1 class="display-4 mt-4">Where Design Meets Delivery</h1>
+  <p class="lead">Elegant sourcing solutions for modern spaces.</p>
+  <a href="/showroom" class="btn btn-outline-light btn-lg mt-3">Visit Showroom</a>
+</div>
+<div class="container text-light py-5 bg-dark">
+  <div class="row">
+    <div class="col-md-6"><h5>Furniture</h5><p>Custom-designed pieces to fit your vision.</p></div>
+    <div class="col-md-6"><h5>Lighting</h5><p>Architectural and ambient solutions.</p></div>
+  </div>
+</div>
+{% endblock %}

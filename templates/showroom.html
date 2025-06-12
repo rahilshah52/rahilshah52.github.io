@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+  <div class="text-center mb-5">
+    <h1 class="mb-3">Visit Our Showroom in Mumbai or Foshan</h1>
+    <p class="fs-5">Experience the quality firsthand. Explore our curated displays of luxury furniture, lighting, and decor solutions tailored to global tastes.</p>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="border p-4 rounded shadow-sm h-100">
+        <h4 class="mb-2">Mumbai Showroom</h4>
+        <p><strong>Address:</strong> 123, Design Street, Andheri West, Mumbai, India</p>
+        <p><strong>Timings:</strong> Mon–Sat: 10am to 6pm</p>
+      </div>
+    </div>
+    <div class="col-md-6 mt-4 mt-md-0">
+      <div class="border p-4 rounded shadow-sm h-100">
+        <h4 class="mb-2">Foshan Showroom</h4>
+        <p><strong>Address:</strong> Block B, Furniture Plaza, Foshan, China</p>
+        <p><strong>Timings:</strong> Mon–Sat: 9am to 5pm</p>
+      </div>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="text-center mb-4">
+    <h2 class="fw-semibold">Book an Appointment</h2>
+    <p class="text-muted">We'll get back to you within 1–2 business days. For urgent inquiries, feel free to contact us directly via WhatsApp or email below.</p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <form method="POST" class="border p-4 rounded shadow-sm bg-light">
+        <div class="mb-3">
+          <label class="form-label">Your Name*</label>
+          <input type="text" name="name" class="form-control" required placeholder="John Doe">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email*</label>
+          <input type="email" name="email" class="form-control" required placeholder="you@example.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Preferred Showroom*</label>
+          <select name="location" class="form-select" required>
+            <option selected disabled>Choose Showroom</option>
+            <option>Mumbai</option>
+            <option>Foshan</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Select Date*</label>
+          <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Message (Optional)</label>
+          <textarea name="message" class="form-control" rows="3" placeholder="Any specific products you want to see?"></textarea>
+        </div>
+        <button type="submit" class="btn btn-dark w-100">Request Appointment</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="text-center mt-5">
+    <p class="text-muted mb-2">Or reach us directly:</p>
+    <p>
+      <i class="fas fa-envelope me-2"></i><a href="mailto:info@rahiimports.com">info@rahiimports.com</a><br>
+      <i class="fab fa-whatsapp me-2 mt-2"></i><a href="https://wa.me/919999999999" target="_blank">Chat on WhatsApp</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

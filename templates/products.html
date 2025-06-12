@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .product-img {
+    height: 220px;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  .scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .scroll-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+
+  .scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* FIX enlarged image */
+  .modal-img {
+  width: 90vw;
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+
+  /* REMOVE bottom gap */
+  footer {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-semibold">Explore by Category</h2>
+    <p class="text-muted">Browse our curated collections by room or style</p>
+  </div>
+
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 mb-4">
+      <div class="list-group" id="category-list">
+        {% for cat in ['bedroom', 'living', 'dining', 'office', 'lighting', 'decor', 'sanitaryware', 'tiles', 'outdoor'] %}
+          <button class="list-group-item list-group-item-action" data-category="{{ cat }}">{{ cat.replace('-', ' ').title() }}</button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Display -->
+<div class="col-md-9">
+
+  <!-- Bedroom Section -->
+  <div class="category-images" id="bedroom-section" style="display: none;">
+    <h4 class="mb-3">Bedroom</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/bedroom/download.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Bedroom Item 1"
+             onclick="openModal(this.src, 'Bedroom Item 1')">
+        <div class="card-body text-center small">Bedroom Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/bedroom/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Bedroom Item 2"
+             onclick="openModal(this.src, 'Bedroom Item 2')">
+        <div class="card-body text-center small">Bedroom Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Living Room Section -->
+  <div class="category-images" id="living-section" style="display: none;">
+    <h4 class="mb-3">Living Room</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/living/download.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Living Room Item 1"
+             onclick="openModal(this.src, 'Living Room Item 1')">
+        <div class="card-body text-center small">Living Room Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/living/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Living Room Item 2"
+             onclick="openModal(this.src, 'Living Room Item 2')">
+        <div class="card-body text-center small">Living Room Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dining Section -->
+  <div class="category-images" id="dining-section" style="display: none;">
+    <h4 class="mb-3">Dining</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/dining/mycustom.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Dining Item 1"
+             onclick="openModal(this.src, 'Dining Item 1')">
+        <div class="card-body text-center small">Dining Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/dining/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Dining Item 2"
+             onclick="openModal(this.src, 'Dining Item 2')">
+        <div class="card-body text-center small">Dining Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Office Section -->
+  <div class="category-images" id="office-section" style="display: none;">
+    <h4 class="mb-3">Office</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/office/office1.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Office Item 1"
+             onclick="openModal(this.src, 'Office Item 1')">
+        <div class="card-body text-center small">Office Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/office/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Office Item 2"
+             onclick="openModal(this.src, 'Office Item 2')">
+        <div class="card-body text-center small">Office Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lighting Section -->
+  <div class="category-images" id="lighting-section" style="display: none;">
+    <h4 class="mb-3">Lighting</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/lighting/lighting1.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Lighting Item 1"
+             onclick="openModal(this.src, 'Lighting Item 1')">
+        <div class="card-body text-center small">Lighting Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/lighting/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Lighting Item 2"
+             onclick="openModal(this.src, 'Lighting Item 2')">
+        <div class="card-body text-center small">Lighting Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decor Section -->
+  <div class="category-images" id="decor-section" style="display: none;">
+    <h4 class="mb-3">Decor</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/decor/decor1.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Decor Item 1"
+             onclick="openModal(this.src, 'Decor Item 1')">
+        <div class="card-body text-center small">Decor Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/decor/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Decor Item 2"
+             onclick="openModal(this.src, 'Decor Item 2')">
+        <div class="card-body text-center small">Decor Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sanitaryware Section -->
+  <div class="category-images" id="sanitaryware-section" style="display: none;">
+    <h4 class="mb-3">Sanitaryware</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/sanitaryware/download.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Sanitaryware Item 1"
+             onclick="openModal(this.src, 'Sanitaryware Item 1')">
+        <div class="card-body text-center small">Sanitaryware Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/sanitaryware/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Sanitaryware Item 2"
+             onclick="openModal(this.src, 'Sanitaryware Item 2')">
+        <div class="card-body text-center small">Sanitaryware Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tiles Section -->
+  <div class="category-images" id="tiles-section" style="display: none;">
+    <h4 class="mb-3">Tiles</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/tiles/tile1.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Tiles Item 1"
+             onclick="openModal(this.src, 'Tiles Item 1')">
+        <div class="card-body text-center small">Tiles Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/tiles/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Tiles Item 2"
+             onclick="openModal(this.src, 'Tiles Item 2')">
+        <div class="card-body text-center small">Tiles Item 2</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Outdoor Section -->
+  <div class="category-images" id="outdoor-section" style="display: none;">
+    <h4 class="mb-3">Outdoor</h4>
+    <div class="scroll-container">
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/outdoor/outdoor1.jpeg') }}"
+             class="img-fluid product-img rounded" alt="Outdoor Item 1"
+             onclick="openModal(this.src, 'Outdoor Item 1')">
+        <div class="card-body text-center small">Outdoor Item 1</div>
+      </div>
+      <div class="card" style="min-width: 220px;">
+        <img src="{{ url_for('static', filename='images/outdoor/download (1).jpeg') }}"
+             class="img-fluid product-img rounded" alt="Outdoor Item 2"
+             onclick="openModal(this.src, 'Outdoor Item 2')">
+        <div class="card-body text-center small">Outdoor Item 2</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- Contact CTA -->
+<div class="section text-center bg-dark text-white mt-5 py-5" style="margin-bottom: 0;">
+  <div class="container" data-aos="fade-up">
+    <h2 class="mb-3">Need Help Finding the Right Product?</h2>
+    <p class="mb-4">We source directly from top manufacturers and offer complete procurement solutions.</p>
+    <a href="/contact" class="btn btn-light btn-lg btn-rounded shadow-sm">Get in Touch</a>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-white" id="imageModalLabel"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex justify-content-center align-items-center">
+        <img id="modalImage" class="modal-img" src="" alt="Enlarged Product">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const categoryButtons = document.querySelectorAll('[data-category]');
+  const categorySections = document.querySelectorAll('.category-images');
+
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const selectedCategory = button.getAttribute('data-category');
+      categorySections.forEach(section => section.style.display = 'none');
+      document.getElementById(selectedCategory + '-section').style.display = 'block';
+      localStorage.setItem('activeCategory', selectedCategory);
+    });
+  });
+
+  function openModal(src, caption) {
+    const modalImg = document.getElementById("modalImage");
+    const modalLabel = document.getElementById("imageModalLabel");
+    modalImg.src = src;
+    modalLabel.innerText = caption;
+    new bootstrap.Modal(document.getElementById("imageModal")).show();
+  }
+
+  window.onload = function () {
+    const lastCategory = localStorage.getItem('activeCategory') || 'bedroom';
+    document.querySelector(`[data-category="${lastCategory}"]`).click();
+  }
+</script>
+<script>
+  // Scroll and open category based on query string
+  window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    if (category) {
+      const button = document.querySelector(`[data-category="${category}"]`);
+      if (button) {
+        button.click();
+        // Scroll to that section
+        const section = document.getElementById(`${category}-section`);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+  });
+</script>
+
+
+{% endblock %}
