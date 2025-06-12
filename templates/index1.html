@@ -60,31 +60,32 @@
   margin-bottom: 0.3rem;
 }
   .whatsapp-float {
-    position: fixed;
-    width: 60px;
-    height: 60px;
-    bottom: 25px;
-    right: 25px;
-    background-color: #25d366;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    z-index: 1000;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.12); }
-    100% { transform: scale(1); }
-  }
-  .whatsapp-icon {
-    width: 30px;
-    height: 30px;
-  }
+  position: fixed;
+  bottom: 25px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  background-color: #25d366;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.whatsapp-icon {
+  font-size: 28px;
+}
   .section-link {
     margin-top: 15px;
     display: inline-block;
@@ -156,7 +157,7 @@
       </div>
     </div>
     <div class="col-md-6 mt-4 mt-md-0">
-      <img src="{{ url_for('static', filename='images/interior-about.webp') }}" class="img-fluid rounded shadow" alt="About Us">
+      <img src="{{ url_for('static', filename='images/about.webp') }}" class="img-fluid rounded shadow" alt="About Us">
     </div>
   </div>
 </div>
@@ -199,6 +200,11 @@
       {% endfor %}
     </div>
   </div>
+  <div class="text-center mt-4">
+  <a href="/products" style="text-decoration: none; color: black; font-weight: 500;">
+    Browse Our Catalog →
+  </a>
+</div>
 </div>
 
 <style>
@@ -249,11 +255,39 @@ function pauseScroll() {
 function resumeScroll() {
   scrollTrack.style.animationPlayState = 'running';
 }
-</script>
+</script><div class="text-center mt-4">
+  
 
-  <a href="/services" class="section-link">Explore Full Services →</a>
+
+<!-- Our Services Section -->
+<div class="section text-center bg-light" data-aos="fade-up">
+  <div class="container">
+    <h2 class="section-title">Our Services</h2>
+    <div class="row g-4">
+      <div class="col-md-3 col-6">
+        <img src="{{ url_for('static', filename='images/services/custom.webp') }}" class="img-fluid mb-2" alt="Custom Design">
+        <p class="fw-semibold">Custom Design</p>
+      </div>
+      <div class="col-md-3 col-6">
+        <img src="{{ url_for('static', filename='images/services/global.webp') }}" class="img-fluid mb-2" alt="Sourcing">
+        <p class="fw-semibold">Global Sourcing</p>
+      </div>
+      <div class="col-md-3 col-6">
+        <img src="{{ url_for('static', filename='images/services/logistics.webp') }}" class="img-fluid mb-2" alt="Shipping">
+        <p class="fw-semibold">Logistics & Shipping</p>
+      </div>
+      <div class="col-md-3 col-6">
+        <img src="{{ url_for('static', filename='images/services/support.webp') }}" class="img-fluid mb-2" alt="Support">
+        <p class="fw-semibold">End-to-End Service</p>
+      </div>
+    </div>
+    <div class="mt-4">
+      <a href="/services" style="text-decoration: none; color: black; font-weight: 1000; font-size: 1.2rem;">
+        End-to-End Service →
+      </a>
+    </div>
+  </div>
 </div>
-
 
 
 <!-- Showroom CTA -->
@@ -272,11 +306,12 @@ function resumeScroll() {
   </div>
 </div>
 
-<!-- WhatsApp Floating Button -->
-<a href="https://wa.me/919821524678" class="whatsapp-float" target="_blank" title="Chat with us on WhatsApp">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="whatsapp-icon" fill="white">
-    <path d="M380.9 97.1C339.1 55.3... (trimmed for brevity; full SVG path already in your previous code) ..."/>
-  </svg>
+<!-- WhatsApp Floating Button (Mobile Only) -->
+<a href="https://wa.me/919821524678" 
+   class="whatsapp-float d-lg-none" 
+   target="_blank" 
+   title="Chat with us on WhatsApp">
+  <i class="fab fa-whatsapp whatsapp-icon"></i>
 </a>
 
 {% endblock %}
