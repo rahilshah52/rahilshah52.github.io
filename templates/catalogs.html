@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+  <h1 class="text-center fw-bold mb-4">Our Catalogs</h1>
+  <p class="text-center text-muted mb-5">Flip through our curated catalogs and discover premium furniture, lighting, tiles, and more — all handpicked from top factories and customized for your projects.</p>
+</div>
+
+<!-- Lighting Catalogs Section -->
+<section id="lighting" class="container pb-5">
+  <h2 class="text-center mb-4 fw-semibold">Lighting Catalogs</h2>
+  <p class="text-center text-muted mb-4">Explore our latest lighting designs — modern, ambient, and architectural pieces for all spaces.</p>
+
+  <!-- Flipbook Embed -->
+  <div class="mb-4">
+    <iframe src="PASTE_FLIPLIBER_EMBED_LINK_HERE" 
+            width="100%" height="650px" 
+            style="border: none; border-radius: 8px;"></iframe>
+  </div>
+
+  <div class="text-center mt-2">
+    <a href="{{ url_for('static', filename='catalogs/Lightings.pdf') }}" 
+       target="_blank" class="btn btn-dark btn-lg">
+      Download Lighting Catalog (PDF)
+    </a>
+  </div>
+</section>
+
+<!-- Add more sections like this for Bedroom, Tiles, etc. -->
+<!-- Example: -->
+<!--
+<section id="bedroom" class="container pb-5">
+  <h2 class="text-center mb-4 fw-semibold">Bedroom Catalogs</h2>
+  <p class="text-center text-muted mb-4">Custom beds, wardrobes, and comfort-driven designs.</p>
+  <iframe src="BEDROOM_FLIPLIBER_LINK_HERE" width="100%" height="650px" style="border: none; border-radius: 8px;"></iframe>
+  <div class="text-center mt-2">
+    <a href="{{ url_for('static', filename='catalogs/Bedroom.pdf') }}" 
+       target="_blank" class="btn btn-dark btn-lg">Download Bedroom Catalog</a>
+  </div>
+</section>
+-->
+
+{% endblock %}

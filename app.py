@@ -4,15 +4,15 @@ from flask_mail import Mail, Message
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-# Email configuration (Ethereal)
+# Email configuration
 app.config.update(
-    MAIL_SERVER='smtp.ethereal.email',
+    MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
     MAIL_USE_SSL=False,
-    MAIL_USERNAME='herbert.romaguera@ethereal.email',
-    MAIL_PASSWORD='w1GwUTnxW1uRNXx2GW',
-    MAIL_DEFAULT_SENDER='herbert.romaguera@ethereal.email'
+    MAIL_USERNAME='uniglobelifestyles@gmail.com',
+    MAIL_PASSWORD='gmnh dwdq hsrm bnrf',  # Consider using environment variables
+    MAIL_DEFAULT_SENDER='uniglobelifestyles@gmail.com'
 )
 
 mail = Mail(app)
@@ -21,13 +21,9 @@ mail = Mail(app)
 def home():
     return render_template('index1.html')
 
-@app.route('/option2')
-def option2():
-    return render_template('index2.html')
-
-@app.route('/option3')
-def option3():
-    return render_template('index3.html')
+@app.route('/catalogs')
+def catalogs():
+    return render_template('catalogs.html')
 
 @app.route('/about')
 def about():
@@ -54,16 +50,25 @@ def showroom():
         location = request.form.get('location')
         message = request.form.get('message')
 
-        msg = Message("New Showroom Appointment", recipients=['herbert.romaguera@ethereal.email'])
+        if not name or not email or not date or not location:
+            flash("All fields marked with * are required.", "danger")
+            return redirect(url_for('showroom'))
+
+        msg = Message("New Showroom Appointment", recipients=['uniglobelifestyles@gmail.com'])
         msg.body = f"""Showroom Booking Request:
 Name: {name}
 Email: {email}
 Preferred Date: {date}
 Location: {location}
-Message: {message}
+Message: {message or 'N/A'}
 """
-        mail.send(msg)
-        flash("Appointment request submitted successfully.")
+        try:
+            mail.send(msg)
+            flash("Appointment request submitted successfully.", "success")
+        except Exception as e:
+            print("Error sending mail:", e)
+            flash("Something went wrong while sending the email. Please try again.", "danger")
+
         return redirect(url_for('showroom'))
 
     return render_template('showroom.html')
@@ -84,7 +89,7 @@ def contact():
             interest = request.form.get('interest')
             message = request.form.get('message')
 
-            msg = Message("New Quotation Request", recipients=['herbert.romaguera@ethereal.email'])
+            msg = Message("New Quotation Request", recipients=['uniglobelifestyles@gmail.com'])
             msg.body = f"""Quotation Request:
 Name: {name}
 Email: {email}
@@ -92,13 +97,12 @@ Phone: {phone}
 Interests: {interest}
 Message: {message}
 """
-
-        else:  # 'product'
+        else:
             category = request.form.get('category')
             product_code = request.form.get('product_code')
             product_message = request.form.get('product_message')
 
-            msg = Message("Product Price Inquiry", recipients=['herbert.romaguera@ethereal.email'])
+            msg = Message("Product Price Inquiry", recipients=['uniglobelifestyles@gmail.com'])
             msg.body = f"""Product Inquiry:
 Name: {name}
 Email: {email}
@@ -107,8 +111,13 @@ Product Description: {product_code}
 Message: {product_message}
 """
 
-        mail.send(msg)
-        flash("Thank you for contacting us!")
+        try:
+            mail.send(msg)
+            flash("Thank you for contacting us!", "success")
+        except Exception as e:
+            print("Error sending mail:", e)
+            flash("Failed to send message. Please try again.", "danger")
+
         return redirect(url_for('contact'))
 
     return render_template('contact.html')
