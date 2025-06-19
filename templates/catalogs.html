@@ -2,82 +2,65 @@
 {% block content %}
 
 <div class="container py-5">
-  <div class="text-center mb-4">
-    <h1 class="fw-bold">Download Our Product Catalogs</h1>
-    <p class="text-muted">Select a category below to download the full catalog.</p>
+  <div class="text-center mb-5">
+    <h1 class="fw-bold display-5">📘 Download Our Product Catalogs</h1>
+    <p class="text-muted fs-5">Multiple catalogs are available for each category. Select and download what fits your needs.</p>
   </div>
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    
+  <div class="accordion" id="catalogAccordion">
+
     <!-- Lighting -->
-    <div class="col">
-      <div class="card shadow-sm h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">Lighting</h5>
-          <p class="card-text text-muted">Explore designer lighting options from our curated factories.</p>
-          <a href="{{ url_for('static', filename='catalogs/Lightings.pdf') }}" 
-             class="btn btn-outline-dark" download>
-            Download Lighting Catalog
-          </a>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingLighting">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLighting" aria-expanded="true" aria-controls="collapseLighting">
+          💡 Lighting
+        </button>
+      </h2>
+      <div id="collapseLighting" class="accordion-collapse collapse show" aria-labelledby="headingLighting" data-bs-parent="#catalogAccordion">
+        <div class="accordion-body">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Lighting Collection Vol. 1
+              <a href="https://drive.google.com/uc?export=download&id=ID_1" class="btn btn-outline-dark btn-sm" target="_blank">Download</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Lighting Collection Vol. 2
+              <a href="https://drive.google.com/uc?export=download&id=ID_2" class="btn btn-outline-dark btn-sm" target="_blank">Download</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
 
     <!-- Bedroom -->
-    <div class="col">
-      <div class="card shadow-sm h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">Bedroom</h5>
-          <p class="card-text text-muted">Luxury beds, wardrobes, and more.</p>
-          <a href="{{ url_for('static', filename='catalogs/Bedroom.pdf') }}" 
-             class="btn btn-outline-dark" download>
-            Download Bedroom Catalog
-          </a>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingBedroom">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBedroom" aria-expanded="false" aria-controls="collapseBedroom">
+          🛏️ Bedroom
+        </button>
+      </h2>
+      <div id="collapseBedroom" class="accordion-collapse collapse" aria-labelledby="headingBedroom" data-bs-parent="#catalogAccordion">
+        <div class="accordion-body">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Bedroom Sets - Modern
+              <a href="https://drive.google.com/uc?export=download&id=ID_3" class="btn btn-outline-dark btn-sm" target="_blank">Download</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Bedroom Sets - Classic
+              <a href="https://drive.google.com/uc?export=download&id=ID_4" class="btn btn-outline-dark btn-sm" target="_blank">Download</a>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Premium Wardrobes
+              <a href="https://drive.google.com/uc?export=download&id=ID_5" class="btn btn-outline-dark btn-sm" target="_blank">Download</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- Living -->
-    <div class="col">
-      <div class="card shadow-sm h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">Living Room</h5>
-          <p class="card-text text-muted">Stylish sofas, coffee tables, and entertainment units.</p>
-          <a href="{{ url_for('static', filename='catalogs/Living.pdf') }}" 
-             class="btn btn-outline-dark" download>
-            Download Living Room Catalog
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dining -->
-    <div class="col">
-      <div class="card shadow-sm h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">Dining</h5>
-          <p class="card-text text-muted">Dining tables, chairs, and sideboards.</p>
-          <a href="{{ url_for('static', filename='catalogs/Dining.pdf') }}" 
-             class="btn btn-outline-dark" download>
-            Download Dining Catalog
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tiles -->
-    <div class="col">
-      <div class="card shadow-sm h-100 text-center">
-        <div class="card-body">
-          <h5 class="card-title">Tiles</h5>
-          <p class="card-text text-muted">Premium flooring and wall tile designs.</p>
-          <a href="{{ url_for('static', filename='catalogs/Tiles.pdf') }}" 
-             class="btn btn-outline-dark" download>
-            Download Tiles Catalog
-          </a>
-        </div>
-      </div>
-    </div>
+    <!-- Add More Categories (Living, Dining, etc.) as Needed -->
+    <!-- Just duplicate the accordion-item block and update names + links -->
 
   </div>
 </div>

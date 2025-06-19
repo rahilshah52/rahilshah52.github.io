@@ -106,35 +106,43 @@
   scrollbar-width: none;
 }
 
-.scrolling-wrapper {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  gap: 1rem;
-  padding: 0 1rem;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.scrolling-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
-.scroll-card {
-  flex-shrink: 0;
-  width: 280px;
-  scroll-snap-align: start;
-  text-decoration: none;
-}
-
-.scroll-card img {
+.scroll-wrapper {
+  overflow: hidden;
+  position: relative;
   width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
+.scroll-track {
+  display: flex;
+  gap: 2rem;
+  animation: scroll-left 40s linear infinite;
+  will-change: transform;
+}
+
+.scroll-item {
+  flex: 0 0 auto;
+  width: 220px;
+  transition: transform 0.3s ease;
+}
+
+.scroll-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.scroll-item:hover {
+  transform: scale(1.05);
+  z-index: 2;
+}
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 
 </style>
 
@@ -175,90 +183,60 @@
   </div>
 </div>
   
-<!-- New Auto-Scrolling Product Section -->
+<!-- Our Products - Auto-Scrolling Infinite Carousel -->
 <div class="section text-center" style="padding: 60px 0; background-color: #f9f9f9;">
   <h2 class="section-title">Our Products</h2>
-  <div class="scroll-wrapper" onmouseover="pauseScroll()" onmouseout="resumeScroll()">
+
+  <div class="scroll-wrapper">
     <div class="scroll-track" id="scrollTrack">
       {% for cat, img in [
         ('Bedroom', 'images/bedroom/download.jpeg'),
         ('Living', 'images/living/download.jpeg'),
         ('Dining', 'images/dining/mycustom.jpeg'),
         ('Office', 'images/office/office1.jpeg'),
-        ('Lighting', 'images/lighting/lighting1.jpeg'),
+        ('Lighting', 'images/lighting/lighting 1.jpeg'),
         ('Decor', 'images/decor/decor1.jpeg'),
         ('Sanitaryware', 'images/sanitaryware/san1.jpeg'),
         ('Tiles', 'images/tiles/tile1.jpeg'),
         ('Outdoor', 'images/outdoor/outdoor1.jpeg')
       ] %}
-        <div class="scroll-item" title="{{ cat }}">
+        <div class="scroll-item">
           <a href="/products?category={{ cat.lower() }}" style="text-decoration: none; color: black;">
             <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
-            <p class="mt-2 text-center fw-semibold" style="color: black;">{{ cat }}</p>
+            <p class="mt-2 fw-semibold">{{ cat }}</p>
+          </a>
+        </div>
+      {% endfor %}
+
+      <!-- Duplicate for seamless loop -->
+      {% for cat, img in [
+        ('Bedroom', 'images/bedroom/download.jpeg'),
+        ('Living', 'images/living/download.jpeg'),
+        ('Dining', 'images/dining/mycustom.jpeg'),
+        ('Office', 'images/office/office1.jpeg'),
+        ('Lighting', 'images/lighting/lighting 1.jpeg'),
+        ('Decor', 'images/decor/decor1.jpeg'),
+        ('Sanitaryware', 'images/sanitaryware/san1.jpeg'),
+        ('Tiles', 'images/tiles/tile1.jpeg'),
+        ('Outdoor', 'images/outdoor/outdoor1.jpeg')
+      ] %}
+        <div class="scroll-item">
+          <a href="/products?category={{ cat.lower() }}" style="text-decoration: none; color: black;">
+            <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
+            <p class="mt-2 fw-semibold">{{ cat }}</p>
           </a>
         </div>
       {% endfor %}
     </div>
   </div>
+
   <div class="text-center mt-4">
-  <a href="/products" style="text-decoration: none; color: black; font-weight: 500;">
-    Browse Our Catalog →
-  </a>
+    <a href="/products" style="text-decoration: none; color: black; font-weight: 500;">
+      Browse Our Full Catalog →
+    </a>
+  </div>
 </div>
-</div>
-
-<style>
-.scroll-wrapper {
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-}
-
-.scroll-track {
-  display: flex;
-  gap: 2rem;
-  animation: scroll-left 40s linear infinite;
-  will-change: transform;
-}
-
-.scroll-item {
-  flex: 0 0 auto;
-  width: 220px;
-  transition: transform 0.3s ease;
-}
-
-.scroll-item img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.scroll-item:hover {
-  transform: scale(1.05);
-  z-index: 2;
-}
-
-@keyframes scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-</style>
-
-<script>
-let scrollTrack = document.getElementById('scrollTrack');
-let originalAnim = scrollTrack.style.animation;
-function pauseScroll() {
-  scrollTrack.style.animationPlayState = 'paused';
-}
-function resumeScroll() {
-  scrollTrack.style.animationPlayState = 'running';
-}
-</script><div class="text-center mt-4">
   
-
-
 <!-- Our Services Section -->
 <div class="section text-center bg-light" data-aos="fade-up">
   <div class="container">
@@ -301,7 +279,7 @@ function resumeScroll() {
 <div class="section text-center">
   <div class="container" data-aos="fade-up">
     <h2 class="section-title">Get in Touch</h2>
-    <p>Email us at <a href="mailto:info@uniglobelifestyles.com">info@uniglobelifestyles.com</a><br>
+    <p>Email us at <a href="mailto:uniglobelifestyles@gmail.com">uniglobelifestyles@gmail.com</a><br>
     Or chat with us directly via WhatsApp.</p>
   </div>
 </div>
