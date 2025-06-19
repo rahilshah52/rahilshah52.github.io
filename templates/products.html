@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- CSS Styles -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <style>
   .product-img {
     height: 220px;
@@ -28,22 +30,40 @@
     background: #f1f1f1;
   }
 
-  /* FIX enlarged image */
-  .modal-img {
-  width: 90vw;
-  height: auto;
-  max-height: 90vh;
-  object-fit: contain;
-}
+  .card img {
+    transition: transform 0.3s ease-in-out;
+  }
 
+  .card:hover img {
+    transform: scale(1.05);
+  }
 
-  /* REMOVE bottom gap */
   footer {
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
+
+  .modal-img {
+    width: 90vw;
+    height: auto;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+
+  .category-images {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  #backToTop {
+    display: none;
+    position: fixed;
+    bottom: 40px;
+    right: 30px;
+    z-index: 99;
+  }
 </style>
 
+<!-- Section: Category Buttons -->
 <div class="container mt-5">
   <div class="text-center mb-4">
     <h2 class="fw-semibold">Explore by Category</h2>
@@ -51,369 +71,123 @@
   </div>
 
   <div class="row">
-    <!-- Sidebar -->
     <div class="col-md-3 mb-4">
       <div class="list-group" id="category-list">
         {% for cat in ['bedroom', 'living', 'dining', 'office', 'lighting', 'decor', 'sanitaryware', 'tiles', 'outdoor'] %}
-          <button class="list-group-item list-group-item-action" data-category="{{ cat }}">{{ cat.replace('-', ' ').title() }}</button>
+          <button class="list-group-item list-group-item-action" data-category="{{ cat }}">{{ cat.title() }}</button>
         {% endfor %}
       </div>
     </div>
 
-    <!-- Product Display -->
-<div class="col-md-9">
+    <!-- Product Section (Right Side) -->
+    <div class="col-md-9">
+      {% for cat in ['bedroom', 'living', 'dining', 'office', 'lighting', 'decor', 'sanitaryware', 'tiles', 'outdoor'] %}
+        <div class="category-images" id="{{ cat }}-section" style="display: none;">
+          <h4 class="mb-3">{{ cat.title().replace('-', ' ') }}</h4>
+          <div class="scroll-container">
+            {% for i in range(1, 21) %}
+              {% set img_path = 'images/' + cat + '/' + cat + ' ' + i|string + '.jpeg' %}
+              <div class="card" style="min-width: 220px;" data-aos="fade-up">
+                <img src="{{ url_for('static', filename=img_path) }}"
+                     class="img-fluid product-img rounded" alt="{{ cat.title() }} Item {{ i }}"
+                     loading="lazy"
+                     onclick="openModal(this.src, '{{ cat.title() }} Item {{ i }}')">
+                <div class="card-body text-center small">{{ cat.title() }} Item {{ i }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
 
-  <!-- Bedroom Section -->
-  <div class="category-images" id="bedroom-section" style="display: none;">
-    <h4 class="mb-3">Bedroom</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/bedroom/download.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Bedroom Item 1"
-             onclick="openModal(this.src, 'Bedroom Item 1')">
-        <div class="card-body text-center small">Bedroom Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/bedroom/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Bedroom Item 2"
-             onclick="openModal(this.src, 'Bedroom Item 2')">
-        <div class="card-body text-center small">Bedroom Item 2</div>
+      <!-- Dynamic Catalog Button -->
+      <div class="text-center mt-4">
+        <a id="catalogLink" href="/catalogs?cat=lighting" class="btn btn-outline-dark">
+          View Full Lighting Catalog →
+        </a>
       </div>
     </div>
-  </div>
-
-  <!-- Living Room Section -->
-  <div class="category-images" id="living-section" style="display: none;">
-    <h4 class="mb-3">Living Room</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/living/download.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Living Room Item 1"
-             onclick="openModal(this.src, 'Living Room Item 1')">
-        <div class="card-body text-center small">Living Room Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/living/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Living Room Item 2"
-             onclick="openModal(this.src, 'Living Room Item 2')">
-        <div class="card-body text-center small">Living Room Item 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Dining Section -->
-  <div class="category-images" id="dining-section" style="display: none;">
-    <h4 class="mb-3">Dining</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/dining/mycustom.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Dining Item 1"
-             onclick="openModal(this.src, 'Dining Item 1')">
-        <div class="card-body text-center small">Dining Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/dining/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Dining Item 2"
-             onclick="openModal(this.src, 'Dining Item 2')">
-        <div class="card-body text-center small">Dining Item 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Office Section -->
-  <div class="category-images" id="office-section" style="display: none;">
-    <h4 class="mb-3">Office</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/office/office1.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Office Item 1"
-             onclick="openModal(this.src, 'Office Item 1')">
-        <div class="card-body text-center small">Office Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/office/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Office Item 2"
-             onclick="openModal(this.src, 'Office Item 2')">
-        <div class="card-body text-center small">Office Item 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Lighting Section -->
-  <div class="category-images" id="lighting-section" style="display: none;">
-    <h4 class="mb-3">Lighting</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 1.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 1"
-             onclick="openModal(this.src, 'Lighting Item 1')">
-        <div class="card-body text-center small">Lighting Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 2.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 2"
-             onclick="openModal(this.src, 'Lighting Item 2')">
-        <div class="card-body text-center small">Lighting Item 2</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 3.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 3"
-             onclick="openModal(this.src, 'Lighting Item 3')">
-        <div class="card-body text-center small">Lighting Item 3</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 4.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 4"
-             onclick="openModal(this.src, 'Lighting Item 4')">
-        <div class="card-body text-center small">Lighting Item 4</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 5.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 5"
-             onclick="openModal(this.src, 'Lighting Item 5')">
-        <div class="card-body text-center small">Lighting Item 5</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 6.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 6"
-             onclick="openModal(this.src, 'Lighting Item 6')">
-        <div class="card-body text-center small">Lighting Item 6</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 7.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 7"
-             onclick="openModal(this.src, 'Lighting Item 7')">
-        <div class="card-body text-center small">Lighting Item 7</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 8.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 8"
-             onclick="openModal(this.src, 'Lighting Item 8')">
-        <div class="card-body text-center small">Lighting Item 8</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 9.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 9"
-             onclick="openModal(this.src, 'Lighting Item 9')">
-        <div class="card-body text-center small">Lighting Item 9</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 10.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 10"
-             onclick="openModal(this.src, 'Lighting Item 10')">
-        <div class="card-body text-center small">Lighting Item 10</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 11.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 11"
-             onclick="openModal(this.src, 'Lighting Item 11')">
-        <div class="card-body text-center small">Lighting Item 11</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 12.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 12"
-             onclick="openModal(this.src, 'Lighting Item 12')">
-        <div class="card-body text-center small">Lighting Item 12</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 13.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 13"
-             onclick="openModal(this.src, 'Lighting Item 13')">
-        <div class="card-body text-center small">Lighting Item 13</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 14.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 14"
-             onclick="openModal(this.src, 'Lighting Item 14')">
-        <div class="card-body text-center small">Lighting Item 14</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 15.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 15"
-             onclick="openModal(this.src, 'Lighting Item 15')">
-        <div class="card-body text-center small">Lighting Item 15</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 16.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 16"
-             onclick="openModal(this.src, 'Lighting Item 16')">
-        <div class="card-body text-center small">Lighting Item 16</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 17.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 17"
-             onclick="openModal(this.src, 'Lighting Item 17')">
-        <div class="card-body text-center small">Lighting Item 17</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 18.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 18"
-             onclick="openModal(this.src, 'Lighting Item 18')">
-        <div class="card-body text-center small">Lighting Item 18</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 19.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 19"
-             onclick="openModal(this.src, 'Lighting Item 19')">
-        <div class="card-body text-center small">Lighting Item 19</div>
-      </div><div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/lighting/lighting 20.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Lighting Item 20"
-             onclick="openModal(this.src, 'Lighting Item 20')">
-        <div class="card-body text-center small">Lighting Item 20</div>
-      </div>
-      </div>
-  </div>
-  
-  <!-- CTA to full Lighting catalog -->
-<div class="text-center mt-4">
-  <a href="/catalogs#lighting" class="btn btn-outline-dark">
-    View Full Lighting Catalog →
-  </a>
-</div>
-
-
-  <!-- Decor Section -->
-  <div class="category-images" id="decor-section" style="display: none;">
-    <h4 class="mb-3">Decor</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/decor/decor1.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Decor Item 1"
-             onclick="openModal(this.src, 'Decor Item 1')">
-        <div class="card-body text-center small">Decor Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/decor/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Decor Item 2"
-             onclick="openModal(this.src, 'Decor Item 2')">
-        <div class="card-body text-center small">Decor Item 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sanitaryware Section -->
-  <div class="category-images" id="sanitaryware-section" style="display: none;">
-    <h4 class="mb-3">Sanitaryware</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/sanitaryware/download.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Sanitaryware Item 1"
-             onclick="openModal(this.src, 'Sanitaryware Item 1')">
-        <div class="card-body text-center small">Sanitaryware Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/sanitaryware/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Sanitaryware Item 2"
-             onclick="openModal(this.src, 'Sanitaryware Item 2')">
-        <div class="card-body text-center small">Sanitaryware Item 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tiles Section -->
-  <div class="category-images" id="tiles-section" style="display: none;">
-    <h4 class="mb-3">Tiles</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/tiles/tile1.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Tiles Item 1"
-             onclick="openModal(this.src, 'Tiles Item 1')">
-        <div class="card-body text-center small">Tiles Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/tiles/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Tiles Item 2"
-             onclick="openModal(this.src, 'Tiles Item 2')">
-        <div class="card-body text-center small">Tiles Item 2</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Outdoor Section -->
-  <div class="category-images" id="outdoor-section" style="display: none;">
-    <h4 class="mb-3">Outdoor</h4>
-    <div class="scroll-container">
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/outdoor/outdoor1.jpeg') }}"
-             class="img-fluid product-img rounded" alt="Outdoor Item 1"
-             onclick="openModal(this.src, 'Outdoor Item 1')">
-        <div class="card-body text-center small">Outdoor Item 1</div>
-      </div>
-      <div class="card" style="min-width: 220px;">
-        <img src="{{ url_for('static', filename='images/outdoor/download (1).jpeg') }}"
-             class="img-fluid product-img rounded" alt="Outdoor Item 2"
-             onclick="openModal(this.src, 'Outdoor Item 2')">
-        <div class="card-body text-center small">Outdoor Item 2</div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-
-
-<!-- Contact CTA -->
-<div class="section text-center bg-dark text-white mt-5 py-5" style="margin-bottom: 0;">
-  <div class="container" data-aos="fade-up">
-    <h2 class="mb-3">Need Help Finding the Right Product?</h2>
-    <p class="mb-4">We source directly from top manufacturers and offer complete procurement solutions.</p>
-    <a href="/contact" class="btn btn-light btn-lg btn-rounded shadow-sm">Get in Touch</a>
   </div>
 </div>
 
-<!-- Image Modal -->
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+<!-- Modal for Image Preview -->
+<div class="modal fade" id="imageModal" tabindex="-1">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content bg-dark">
       <div class="modal-header border-0">
         <h5 class="modal-title text-white" id="imageModalLabel"></h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body d-flex justify-content-center align-items-center">
-        <img id="modalImage" class="modal-img" src="" alt="Enlarged Product">
+        <img id="modalImage" class="modal-img" src="" alt="Product Image">
       </div>
     </div>
   </div>
 </div>
 
+<!-- Back to Top -->
+<button onclick="scrollToTop()" id="backToTop" class="btn btn-dark rounded-circle">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- CTA Section -->
+<div class="section text-center bg-dark text-white mt-5 py-5">
+  <div class="container" data-aos="fade-up">
+    <h2 class="mb-3">Need Help Finding the Right Product?</h2>
+    <p class="mb-4">We source directly from top manufacturers and offer complete procurement solutions.</p>
+    <a href="/contact" class="btn btn-light btn-lg">Get in Touch</a>
+  </div>
+</div>
+
+<!-- JS Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
+  AOS.init();
+
+  function openModal(src, title) {
+    document.getElementById('modalImage').src = src;
+    document.getElementById('imageModalLabel').textContent = title;
+    new bootstrap.Modal(document.getElementById('imageModal')).show();
+  }
+
   const categoryButtons = document.querySelectorAll('[data-category]');
   const categorySections = document.querySelectorAll('.category-images');
 
   categoryButtons.forEach(button => {
     button.addEventListener('click', () => {
       const selectedCategory = button.getAttribute('data-category');
+
       categorySections.forEach(section => section.style.display = 'none');
       document.getElementById(selectedCategory + '-section').style.display = 'block';
+
       localStorage.setItem('activeCategory', selectedCategory);
+
+      const catalogBtn = document.getElementById('catalogLink');
+      const capitalized = selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1);
+      catalogBtn.innerText = `View Full ${capitalized} Catalog →`;
+      catalogBtn.href = `/catalogs?cat=${selectedCategory}`;
     });
   });
 
-  function openModal(src, caption) {
-    const modalImg = document.getElementById("modalImage");
-    const modalLabel = document.getElementById("imageModalLabel");
-    modalImg.src = src;
-    modalLabel.innerText = caption;
-    new bootstrap.Modal(document.getElementById("imageModal")).show();
-  }
-
-  window.onload = function () {
-    const lastCategory = localStorage.getItem('activeCategory') || 'bedroom';
-    document.querySelector(`[data-category="${lastCategory}"]`).click();
-  }
-</script>
-<script>
-  // Scroll and open category based on query string
   window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
-    if (category) {
-      const button = document.querySelector(`[data-category="${category}"]`);
-      if (button) {
-        button.click();
-        // Scroll to that section
-        const section = document.getElementById(`${category}-section`);
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-    }
-  });
-</script>
+    const stored = localStorage.getItem('activeCategory');
+    const openCategory = category || stored || 'bedroom';
 
+    const btn = document.querySelector(`[data-category="${openCategory}"]`);
+    if (btn) btn.click();
+
+    if (!category) localStorage.removeItem('activeCategory');
+  });
+
+  window.onscroll = function () {
+    const btn = document.getElementById("backToTop");
+    btn.style.display = (document.documentElement.scrollTop > 100) ? "block" : "none";
+  };
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
 
 {% endblock %}

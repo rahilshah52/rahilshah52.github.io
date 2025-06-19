@@ -14,7 +14,7 @@
     color: #333;
   }
   .hero {
-    background: url("{{ url_for('static', filename='images/hero.webp') }}") no-repeat center center / cover;
+    background: url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
     color: white;
     padding: 140px 20px;
     text-align: center;
@@ -96,16 +96,7 @@
   .section-link:hover {
     text-decoration: underline;
   }
-  .scrolling-wrapper {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  gap: 1rem;
-  padding: 0 1rem;
-  scrollbar-width: none;
-}
-
+  
 .scroll-wrapper {
   overflow: hidden;
   position: relative;
@@ -117,6 +108,7 @@
   gap: 2rem;
   animation: scroll-left 40s linear infinite;
   will-change: transform;
+  width: max-content;
 }
 
 .scroll-item {
