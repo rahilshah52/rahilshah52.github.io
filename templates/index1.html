@@ -181,50 +181,30 @@
 
   <div class="scroll-wrapper">
     <div class="scroll-track" id="scrollTrack">
-      {% for cat, img in [
-        ('Bedroom', 'images/bedroom/download.jpeg'),
-        ('Living', 'images/living/download.jpeg'),
-        ('Dining', 'images/dining/mycustom.jpeg'),
-        ('Office', 'images/office/office1.jpeg'),
-        ('Lighting', 'images/lighting/lighting 1.jpeg'),
-        ('Decor', 'images/decor/decor1.jpeg'),
-        ('Sanitaryware', 'images/sanitaryware/san1.jpeg'),
-        ('Tiles', 'images/tiles/tile1.jpeg'),
-        ('Outdoor', 'images/outdoor/outdoor1.jpeg')
-      ] %}
-        <div class="scroll-item">
-          <a href="/products?category={{ cat.lower() }}" style="text-decoration: none; color: black;">
-            <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
-            <p class="mt-2 fw-semibold">{{ cat }}</p>
-          </a>
-        </div>
-      {% endfor %}
-
-      <!-- Duplicate for seamless loop -->
-      {% for cat, img in [
-        ('Bedroom', 'images/bedroom/download.jpeg'),
-        ('Living', 'images/living/download.jpeg'),
-        ('Dining', 'images/dining/mycustom.jpeg'),
-        ('Office', 'images/office/office1.jpeg'),
-        ('Lighting', 'images/lighting/lighting 1.jpeg'),
-        ('Decor', 'images/decor/decor1.jpeg'),
-        ('Sanitaryware', 'images/sanitaryware/san1.jpeg'),
-        ('Tiles', 'images/tiles/tile1.jpeg'),
-        ('Outdoor', 'images/outdoor/outdoor1.jpeg')
-      ] %}
-        <div class="scroll-item">
-          <a href="/products?category={{ cat.lower() }}" style="text-decoration: none; color: black;">
-            <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
-            <p class="mt-2 fw-semibold">{{ cat }}</p>
-          </a>
-        </div>
-      {% endfor %}
+  {% for cat, img in homepage_display.items() %}
+    <div class="scroll-item">
+      <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
+        <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
+        <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
+      </a>
     </div>
+  {% endfor %}
+
+  <!-- Repeat for seamless scroll -->
+  {% for cat, img in homepage_display.items() %}
+    <div class="scroll-item">
+      <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
+        <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
+        <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
+      </a>
+    </div>
+  {% endfor %}
+</div>
   </div>
 
   <div class="text-center mt-4">
     <a href="/products" style="text-decoration: none; color: black; font-weight: 500;">
-      Browse Our Full Catalog →
+      Browse Our Full Product Line →
     </a>
   </div>
 </div>

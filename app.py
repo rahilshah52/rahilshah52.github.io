@@ -1,6 +1,31 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
+import os
+from flask import Flask, render_template
+
+app = Flask(__name__)
+# List of product categories (editable!)
+categories = ['bedroom', 'living', 'dining', 'modular', 'lighting', 'sanitaryware', 'premium']
+# Put this near the top or in a global config section
+homepage_display = {
+    'bedroom': 'images/bedroom/bed 15.jpeg',
+    'living': 'images/living/living_room 19.jpeg',
+    'dining': 'images/dining/tables_catalog_18_1.jpeg',
+    'modular': 'images/modular/plywood_cabinet 17.jpeg',
+    'lighting': 'images/lighting/lighting 1.jpeg',
+    'sanitaryware': 'images/sanitaryware/washbasin_faucets 78.jpeg',
+    'premium': 'images/premium/tile1.jpeg'
+}
+homepage_display_names = {
+    'bedroom': 'Bedroom & Bed',
+    'living': 'Lounge Seating',
+    'dining': 'Dining & Coffee Tables',
+    'modular': 'Modular Cabinets',
+    'lighting': 'Lightings & Fixtures',
+    'sanitaryware': 'Sanitaryware',
+    'premium': 'Premium Collection',
+}
 
 
 app = Flask(__name__)
@@ -21,7 +46,7 @@ mail = Mail(app)
 
 @app.route('/')
 def home():
-    return render_template('index1.html')
+    return render_template('index1.html', homepage_display=homepage_display, homepage_display_names=homepage_display_names)
 
 @app.route('/catalogs')
 def catalogs():
@@ -31,9 +56,51 @@ def catalogs():
 def about():
     return render_template('about.html')
 
+import os
+
 @app.route('/products')
 def products():
-    return render_template('products.html')
+    base_path = os.path.join(app.static_folder, 'images')
+
+    category_display_names = {
+        'bedroom': 'Bedroom & Beds',
+        'living': 'Sofa & Lounge Seating',
+        'dining': 'Dining & Coffee Tables',
+        'modular': 'Modular Furniture and Cabinets',
+        'lighting': 'Lighting & Fixtures',
+        'sanitaryware': 'Sanitaryware & Bathroom Fittings',
+        'Premium': 'Premuim Collection'
+    }
+
+    category_prefixes = {
+        'bedroom': 'BD',
+        'living': 'LV',
+        'dining': 'DG',
+        'modular': 'MC',
+        'lighting': 'LG',
+        'sanitaryware': 'SW',
+        'premium': 'PC'
+    }
+
+    product_images = {}
+
+    for category, prefix in category_prefixes.items():
+        folder_path = os.path.join(base_path, category)
+        if os.path.isdir(folder_path):
+            images = sorted(os.listdir(folder_path))
+            product_images[category] = {
+                'display_name': category_display_names.get(category, category.title()),
+                'items': []
+            }
+            for i, img in enumerate(images, start=1):
+                if img.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                    code = f"{prefix}{i}"
+                    product_images[category]['items'].append({
+                        'filename': img,
+                        'code': code
+                    })
+
+    return render_template('products.html', product_images=product_images)
 
 @app.route('/services')
 def services():
