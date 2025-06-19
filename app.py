@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_mail import Mail, Message
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -43,6 +45,8 @@ def projects():
 
 @app.route('/showroom', methods=['GET', 'POST'])
 def showroom():
+    today = datetime.today().strftime('%Y-%m-%d')  # Get today's date in proper format
+    max_date = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')  # 30 days from today
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
@@ -71,7 +75,8 @@ Message: {message or 'N/A'}
 
         return redirect(url_for('showroom'))
 
-    return render_template('showroom.html')
+    return render_template('showroom.html', today=today)
+
 
 @app.route('/blog')
 def blog():
