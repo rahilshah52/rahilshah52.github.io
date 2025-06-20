@@ -453,7 +453,6 @@ html {
 
 @media (max-width: 768px) {
   html, body {
-    overflow-x: hidden !important;
     overflow-y: auto;
     margin: 0;
     padding: 0;
@@ -617,6 +616,17 @@ html {
   <i class="fab fa-whatsapp whatsapp-icon"></i>
 </a>
 
+
+<script>
+  // This AOS.init() is specifically for elements with data-aos attributes on this page.
+  // The global AOS.init in base.html also works, but having one here ensures it fires
+  // if this page has dynamic content or needs slightly different settings.
+  // If base.html's AOS.init is sufficient, this can be removed, but for now, let's keep it.
+  AOS.init({
+    once: true, // Example setting, animates elements only once
+    duration: 800 // Example setting, animation duration
+  });
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
