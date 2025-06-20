@@ -1,43 +1,86 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- Fonts and AOS -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<script>
+  // Force scroll to top immediately before rendering content
+  window.onload = function() {
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 0); // Execute immediately on load, a setTimeout(0) can sometimes help
+  };
+  // For older or more stubborn browsers, consider checking scroll position
+  // and re-scrolling if not at top after a brief moment.
+  // This is a more aggressive approach than just DOMContentLoaded.
+  document.documentElement.scrollTop = 0; // For modern browsers
+  document.body.scrollTop = 0; // For older IE/Safari
+  // We also keep the ones in the main script for good measure
+</script>
 
+<style
+* {
+  box-sizing: border-box;
+}
 
-<style>
-  body {
-    font-family: 'Inter', sans-serif;
-    color: #333;
-  }
-  .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
-    color: white;
-    padding: 140px 20px;
-    text-align: center;
-  }
-  .section {
-    padding: 60px 0;
-  }
-  .section-title {
-    font-size: 2.2rem;
-    font-weight: 600;
-    margin-bottom: 30px;
-  }
-  .about-dark {
-    background: #111;
-    color: white;
-    padding: 40px;
-    border-radius: 12px;
-  }
-  .product-img {
-    width: 100%;
-    max-width: 360px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  .highlight-section {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+html, body {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body > * {
+  overflow-y: visible !important; /* prevent nested vertical scroll */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* --- Hero Section --- */
+.hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
+  color: white;
+  padding: 140px 20px;
+  text-align: center;
+}
+
+/* --- General Section Styling --- */
+.section {
+  padding: 60px 0;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+/* --- About Section --- */
+.about-dark {
+  background: #111;
+  color: white;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.product-img {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* --- Highlight Section --- */
+.highlight-section {
   background: linear-gradient(180deg, #e5e5e5 0%, #f7f7f7 100%);
   padding: 60px 20px;
   box-shadow: inset 0 1px 6px rgba(0,0,0,0.08);
@@ -56,7 +99,9 @@
   display: block;
   margin-bottom: 0.3rem;
 }
-  .whatsapp-float {
+
+/* --- WhatsApp Floating Button --- */
+.whatsapp-float {
   position: fixed;
   bottom: 25px;
   right: 20px;
@@ -83,52 +128,44 @@
 .whatsapp-icon {
   font-size: 28px;
 }
-  .section-link {
-    margin-top: 15px;
-    display: inline-block;
-    font-weight: 500;
-    color: #0066cc;
-    text-decoration: none;
-  }
-  .section-link:hover {
-    text-decoration: underline;
-  }
-  
-.scroll-wrapper {
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  touch-action: pan-x;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+
+/* --- General Link/Button Styles --- */
+.section-link {
+  margin-top: 15px;
+  display: inline-block;
+  font-weight: 500;
+  color: #0066cc;
+  text-decoration: none;
 }
 
-.scroll-wrapper::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+.section-link:hover {
+  text-decoration: underline;
+}
+
+.btn:hover {
+  transform: scale(1.03);
+  transition: all 0.2s ease;
+}
+
+/* --- Carousel (Desktop & Mobile Auto-scroll Only, No Manual Scroll) --- */
+.scroll-wrapper {
+  overflow: hidden !important;  /* hide scrollbar and disable manual scroll */
+  width: 100%;
+  position: relative;         /* disable user interaction */
 }
 
 .scroll-track {
   display: flex;
   gap: 2rem;
-  width: max-content;
-  scroll-snap-align: start;
-  scroll-behavior: smooth;
+  width: fit-content;
   will-change: transform;
+  animation: scroll-left 40s linear infinite;
+  cursor: pointer;
 }
 
-
-
-.scroll-item {
-  flex: 0 0 auto;
-  width: 220px;
-  transition: transform 0.3s ease;
-  scroll-snap-align: start;
-}
-
-.scroll-item:hover {
-  transform: scale(1.05);
-  z-index: 2;
+/* Pause animation on hover */
+.scroll-track:hover {
+  animation-play-state: paused !important;
 }
 
 @keyframes scroll-left {
@@ -136,116 +173,77 @@
   100% { transform: translateX(-50%); }
 }
 
+.scroll-item {
+  flex: 0 0 auto;
+  width: 220px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  /* Added for better text/image spacing */
+  display: flex; /* Make it a flex container */
+  flex-direction: column; /* Stack children (img and p) vertically */
+  justify-content: space-between; /* Push image to top, text to bottom within the item */
+}
+
+.scroll-item:hover {
+  transform: scale(1.05); /* This is your slight pop-up effect */
+  z-index: 10;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+
 .scroll-item img {
   width: 100%;
   height: 150px;
   object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  display: block;
+  filter: none; /* clean and crisp */
+  transition: transform 0.3s ease;
+}
+.scroll-item p {
+    margin-top: 10px; /* Provides space between image and text */
+    padding: 0 10px 10px; /* Adds horizontal padding and bottom padding within the item */
+    text-align: center; /* Centers the text */
+    word-wrap: break-word; /* Allows long words to break and wrap */
+    white-space: normal; /* Ensures text wraps normally (overrides potential nowrap) */
+}
+/* --- General Card Styling --- */
+.card img {
+  object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
-@media (max-width: 576px) {
-  .scroll-item {
-    width: 160px; /* smaller cards */
-  }
-
-  .scroll-item img {
-    height: 100px; /* smaller images */
-  }
-
-  .scroll-item p {
-    font-size: 0.85rem; /* smaller text */
-    margin-top: 0.3rem;
-  }
+.card:hover img {
+  transform: scale(1.05);
 }
 
-@media (max-width: 576px) {
-  .scroll-item {
-    width: 160px;
-  }
-
-  .scroll-item p {
-    font-size: 0.85rem;
-    text-align: center;
-    line-height: 1.2;
-    margin: 6px 0 0;
-    padding: 0 5px;
-    white-space: normal;
-  }
-
-  .scroll-item img {
-    height: 120px;
-  }
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  overflow: hidden;
 }
 
-@media (max-width: 576px) {
-  .highlight-section .col-6 {
-    flex: 0 0 100%;
-    max-width: 100%;
-    padding: 12px 0;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .highlight-section .col-6:last-child {
-    border-bottom: none;
-  }
-
-  .highlight-section strong {
-    font-size: 1rem;
-  }
-
-  .highlight-section p {
-    font-size: 0.9rem;
-  }
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 576px) {
-  .section .col-6 {
-    flex: 0 0 100%;
-    max-width: 100%;
-    padding: 15px 0;
+/* --- MOBILE SPECIFIC STYLES --- */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
-  .section .col-6 img {
-    max-width: 100px;
-    height: auto;
-    margin-bottom: 10px;
+  .hero {
+    padding: 80px 15px;
   }
 
-  .section .col-6 p {
-    font-size: 0.95rem;
-    margin-bottom: 0;
-  }
-
-  .section .mt-4 a {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .section .container p {
-    font-size: 0.95rem;
-    line-height: 1.4;
-  }
-
-  .section h2.section-title {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-  }
-
-  .section a {
-    word-break: break-word;
-    font-size: 0.95rem;
-  }
-
-  .section {
-    padding: 30px 15px;
-  }
-}
-
-@media (max-width: 576px) {
-
-  /* Reduce top/bottom padding for sections */
   .section,
   .highlight-section,
   .container.section {
@@ -253,96 +251,33 @@
     padding-bottom: 40px !important;
   }
 
-  /* Tighter spacing for highlight section columns */
-  .highlight-section .row.g-4 > div {
-    padding: 10px;
+  .section-title {
+    font-size: 1.5rem !important;
+    margin-bottom: 1rem;
   }
 
-  /* Reduce hero padding on mobile */
-  .hero {
-    padding: 80px 15px;
+  p, .lead, .fw-semibold {
+    font-size: 0.92rem !important;
+    line-height: 1.5;
   }
 
-  /* Tweak button sizes */
+  .btn {
+    font-size: 0.95rem;
+  }
+
   .btn-lg {
-    padding: 10px 20px;
     font-size: 1rem;
+    padding: 10px 20px;
   }
 
-  /* Prevent big shadow on images from feeling too bulky */
   .product-img,
   .img-fluid.rounded.shadow {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
-}
-
-@media (max-width: 768px) {
-  /* General body overflow: Allow content to scroll, but don't force horizontal scroll */
-  body {
-    overflow-x: hidden; /* Remove !important */
-    overflow-y: auto;
-  }
-
-  /* Containers, rows, cols should generally not have horizontal overflow */
-  .container, .container-fluid, .row, .col {
-    max-width: 100%;
-    overflow-x: hidden; /* Remove !important. Apply only if needed to prevent specific content from escaping. */
-  }
-
-  /* Images and sections usually scale, no need for overflow-x hidden on them directly */
-  img, section {
-    max-width: 100%;
-    height: auto; /* Ensures images scale properly */
-  }
-
-  /* === CRITICAL FOR THE CAROUSEL SCROLLING === */
-  .scroll-wrapper {
-    overflow-x: auto; /* This ALLOWS horizontal scrolling */
-    overflow-y: hidden; /* Prevents vertical scrollbar from appearing for this section */
-    -webkit-overflow-scrolling: touch; /* Improves native-like scrolling on iOS */
-    scroll-snap-type: x mandatory; /* Keep if you want snap effect */
-    scrollbar-width: none; /* Firefox: Hides scrollbar */
-    -ms-overflow-style: none; /* IE/Edge: Hides scrollbar */
-  }
-
-  .scroll-wrapper::-webkit-scrollbar {
-    display: none; /* Chrome/Safari: Hides scrollbar */
-  }
-
-  .scroll-track {
-    display: flex;
-    gap: 2rem; /* Ensure this matches your desired spacing */
-    width: max-content; /* Allows track to be wider than wrapper for scrolling */
-    will-change: transform; /* Performance hint for browser */
-    animation: none !important; /* !!! Crucial: Disable desktop CSS animation on mobile !!! */
-  }
-
-  /* Ensure box-sizing is always applied */
-  * {
-    box-sizing: border-box;
-  }
-}
-
-/* === Desktop Animation Re-application === */
-/* This rule must be separate and *only* apply on desktop */
-@media (min-width: 769px) {
-  .scroll-track {
-    animation: scroll-left 40s linear infinite;
-    animation-play-state: running;
-  }
-}
-
-
-@media (max-width: 576px) {
   .about-dark {
     padding: 25px;
     border-radius: 10px;
-  }
-
-  .about-dark h2.section-title {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
   }
 
   .about-dark p {
@@ -365,28 +300,126 @@
   .container.section .row {
     margin: 0 !important;
   }
-}
 
-@media (max-width: 576px) {
-  .section.bg-light .row.g-4 > div {
-    text-align: center;
-    padding: 15px 5px;
+  /* --- Carousel on Mobile: keep same auto scroll, no manual scroll --- */
+  .scroll-wrapper {
+    overflow: hidden !important;
+  }
+
+  .scroll-track {
+    animation: scroll-left 40s linear infinite !important;
+    flex-wrap: nowrap;  /* keep items inline */.scroll-item p
+    cursor: pointer;
+  }
+
+  .scroll-track:hover {
+    animation-play-state: paused !important;
+  }
+
+  .scroll-item {
+    width: 220px;
+    margin-bottom: 0;
+    transform: none !important;
+    border-radius: 12px;
+   overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    /* Added for consistent flex behavior on mobile */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .scroll-item:hover {
+    transform: scale(1.05) !important;
+    z-index: 10 !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3) !important;
+  }
+
+  .scroll-item img {
+    height: 150px;
+    border-radius: 12px;
+    filter: none;
+    transition: transform 0.3s ease;
+  }
+
+  .scroll-item p {
+    font-size: 1rem;
+    margin-top: 10px; /* Consistent margin for mobile as well */
+    padding: 0 10px 10px; /* Consistent padding for mobile */
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  /* --- Highlight Section --- */
+  .highlight-section .col-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 12px 0;
     border-bottom: 1px solid #ddd;
   }
 
-  .section.bg-light .row.g-4 > div:last-child {
+  .highlight-section .col-6:last-child {
     border-bottom: none;
   }
 
+  .highlight-section strong {
+    font-size: 1rem;
+  }
+
+  .highlight-section p {
+    font-size: 0.9rem;
+  }
+
+  .highlight-section .row.g-4 > div {
+    padding: 10px;
+  }
+
+  /* --- Services Section --- */
+  .section.bg-light .row.g-4 > div {
+    text-align: center;
+  }
+
+  .section.bg-light .card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 15px;
+    background-color: white;
+  }
+
+  .section.bg-light .card:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .section.bg-light .card a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .section.bg-light .row.g-4 {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1.5rem;
+    justify-content: center;
+  }
+
   .section.bg-light .row.g-4 img {
-    max-width: 80px;
+    max-width: 90px;
     height: auto;
     margin-bottom: 8px;
+    border-radius: 8px;
   }
 
   .section.bg-light .row.g-4 p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin: 0;
+    font-weight: 600;
+    color: #333;
   }
 
   .section.bg-light .mt-4 a {
@@ -395,86 +428,7 @@
     margin-top: 12px;
   }
 }
-.card img {
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
 
-.card:hover img {
-  transform: scale(1.05);
-}
-
-@media (max-width: 576px) {
-  .card {
-    padding: 10px !important;
-  }
-
-  .card img {
-    height: 100px;
-    object-fit: contain;
-  }
-
-  .card p {
-    font-size: 0.95rem;
-    margin-bottom: 0;
-  }
-}
-
-@media (max-width: 576px) {
-  p, .lead, .fw-semibold {
-    font-size: 0.92rem !important;
-    line-height: 1.5;
-  }
-
-  .section-title {
-    font-size: 1.35rem !important;
-  }
-
-  .btn {
-    font-size: 0.95rem;
-  }
-
-  .btn-lg {
-    font-size: 1rem;
-    padding: 10px 20px;
-  }
-}
-
-@media (min-width: 768px) {
-  .btn:hover {
-    transform: scale(1.03);
-    transition: all 0.2s ease;
-  }
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-@media (max-width: 768px) {
-  html, body {
-    overflow-y: auto;
-    margin: 0;
-    padding: 0;
-  }
-
-  .scroll-wrapper,
-  .scroll-track,
-  .scroll-item {
-    overflow-y: hidden !important;
-    max-height: 100% !important;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-}
-@media (min-width: 769px) {
-  .scroll-track {
-    animation: scroll-left 40s linear infinite;
-    animation-play-state: running;
-  }
-}
 
 </style>
 
@@ -618,111 +572,12 @@ html {
 
 
 <script>
-  // This AOS.init() is specifically for elements with data-aos attributes on this page.
-  // The global AOS.init in base.html also works, but having one here ensures it fires
-  // if this page has dynamic content or needs slightly different settings.
-  // If base.html's AOS.init is sufficient, this can be removed, but for now, let's keep it.
-  AOS.init({
-    once: true, // Example setting, animates elements only once
-    duration: 800 // Example setting, animation duration
-  });
+document.addEventListener("DOMContentLoaded", function () {
+  window.scrollTo(0, 0);
+});
+document.addEventListener("touchmove", () => {
+  console.log("Touch scrolling working");
+});
 </script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const track = document.getElementById("scrollTrack");
-
-    // Only proceed if the scrollTrack element exists on this page
-    if (track) {
-      let autoScrollInterval; // For mobile JS scrolling
-      let isTouching = false; // Flag for mobile touch
-      let touchTimeout;       // Timeout for mobile touch resume
-      const scrollSpeed = 1;  // Adjust mobile scroll speed: higher = faster
-
-      // Calculate the width of one full set of items for seamless mobile loop
-      let contentWidth = 0;
-      const trackStyle = getComputedStyle(track);
-      const gapValue = parseFloat(trackStyle.gap) || 0;
-
-      for (let i = 0; i < track.children.length / 2; i++) {
-        contentWidth += track.children[i].offsetWidth + gapValue;
-      }
-      contentWidth -= gapValue; // Adjust for the last gap added in the loop
-
-      // --- Mobile Auto-Scroll Functions (JS-based) ---
-      function startAutoScrollMobile() {
-        if (autoScrollInterval) clearInterval(autoScrollInterval);
-
-        autoScrollInterval = setInterval(() => {
-          track.scrollLeft += scrollSpeed;
-          if (track.scrollLeft >= contentWidth) {
-            track.scrollLeft = 0;
-          }
-        }, 30); // Milliseconds per step
-      }
-
-      function stopAutoScrollMobile() {
-        clearInterval(autoScrollInterval);
-      }
-
-      // --- Handle Screen Size Changes (Desktop CSS vs. Mobile JS) ---
-      function handleScreenSize() {
-        if (window.innerWidth < 769) { // Mobile View
-          // 1. Stop any desktop CSS animation
-          track.style.animationPlayState = "paused";
-          track.style.animation = "none"; // Explicitly remove CSS animation property
-          
-          // 2. Start mobile JavaScript auto-scroll
-          startAutoScrollMobile();
-
-        } else { // Desktop View (769px and above)
-          // 1. Stop mobile JavaScript auto-scroll
-          stopAutoScrollMobile();
-
-          // 2. Ensure desktop CSS animation is applied and running
-          // Only set the animation property if it's not already correct, to avoid flicker/restarts
-          if (track.style.animation !== "scroll-left 40s linear infinite") {
-              track.style.animation = "scroll-left 40s linear infinite";
-          }
-          track.style.animationPlayState = "running";
-
-          // 3. Re-attach desktop hover listeners if not already present
-          // We moved these out of the DOMContentLoaded global listener in base.html
-          // so they need to be managed here, but only once.
-          if (!track.__desktopListenersAdded) { // Custom flag to prevent multiple attachments
-            track.addEventListener('mouseenter', () => {
-              track.style.animationPlayState = 'paused';
-            });
-            track.addEventListener('mouseleave', () => {
-              track.style.animationPlayState = 'running';
-            });
-            track.__desktopListenersAdded = true; // Mark as added
-          }
-        }
-      }
-
-      // --- Mobile Touch Interactions (to pause/resume auto-scroll) ---
-      track.addEventListener("touchstart", () => {
-        isTouching = true;
-        stopAutoScrollMobile();
-        clearTimeout(touchTimeout);
-      }, { passive: true });
-
-      track.addEventListener("touchend", () => {
-        isTouching = false;
-        touchTimeout = setTimeout(() => {
-          if (!isTouching && window.innerWidth < 769) { // Only resume on mobile
-            startAutoScrollMobile();
-          }
-        }, 2000); // Resume after 2 seconds
-      });
-
-      // --- Event Listeners ---
-      window.addEventListener('resize', handleScreenSize); // Recalculate on resize
-      handleScreenSize(); // Initial setup on page load
-    }
-  });
-</script>
-
 
 {% endblock %}
