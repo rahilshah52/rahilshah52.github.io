@@ -12,10 +12,10 @@ homepage_display = {
     'bedroom': 'images/bedroom/bed 15.jpeg',
     'living': 'images/living/living_room 19.jpeg',
     'dining': 'images/dining/tables_catalog_18_1.jpeg',
-    'modular': 'images/modular/plywood_cabinet 17.jpeg',
+    'modular': 'images/modular/plywood_cabinet 17.png',
     'lighting': 'images/lighting/lighting 1.jpeg',
     'sanitaryware': 'images/sanitaryware/washbasin_faucets 78.jpeg',
-    'premium': 'images/premium/tile1.jpeg'
+    'premium': 'images/premium/baxter_2_128_5.jpeg'
 }
 homepage_display_names = {
     'bedroom': 'Bedroom & Bed',
