@@ -295,38 +295,35 @@
 
 @media (max-width: 768px) {
   html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* prevent horizontal scroll */
-  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-  height: auto !important;
-}
-
-  /* Keep other elements restricted, but DO NOT restrict scroll-wrapper or scroll-track */
-  .container, .container-fluid, .row, .col,
-  img, section {
-    max-width: 100% !important;
     overflow-x: hidden !important;
+    margin: 0;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
-  * {
-    box-sizing: border-box;
-  }
-
-  /* ALLOW scroll-wrapper to scroll horizontally */
   .scroll-wrapper {
     overflow-x: auto !important;
+    overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
   }
 
   .scroll-track {
     display: flex;
     gap: 2rem;
     width: max-content;
-    will-change: transform;
+  }
+
+  .scroll-item {
+    flex: 0 0 auto;
+    width: 160px;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 }
+
 
 
 @media (max-width: 576px) {
