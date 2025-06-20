@@ -311,7 +311,8 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const category = urlParams.get('category') || localStorage.getItem('activeCategory') || Object.keys({{ product_images|tojson }}).at(0);
+    const productImages = {{ product_images|tojson|safe }};
+    const category = urlParams.get('category') || localStorage.getItem('activeCategory') || Object.keys(productImages).at(0);
     const btn = document.querySelector(`[data-category="${category}"]`);
     if (btn) btn.click();
   });
