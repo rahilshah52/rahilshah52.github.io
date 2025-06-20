@@ -97,23 +97,6 @@
   display: block;
   margin-bottom: 0.3rem;
 }
-  .whatsapp-float {
-  position: fixed;
-  bottom: 25px;
-  right: 20px;
-  width: 55px;
-  height: 55px;
-  background-color: #25d366;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  animation: pulse 2s infinite;
-}
 
 @keyframes pulse {
   0% { transform: scale(1); }
@@ -121,9 +104,6 @@
   100% { transform: scale(1); }
 }
 
-.whatsapp-icon {
-  font-size: 28px;
-}
   .section-link {
     margin-top: 15px;
     display: inline-block;
@@ -286,7 +266,6 @@
 
 @media (max-width: 576px) {
 
-  /* Reduce top/bottom padding for sections */
   .section,
   .highlight-section,
   .container.section {
@@ -294,23 +273,19 @@
     padding-bottom: 40px !important;
   }
 
-  /* Tighter spacing for highlight section columns */
   .highlight-section .row.g-4 > div {
     padding: 10px;
   }
 
-  /* Reduce hero padding on mobile */
   .hero {
     padding: 80px 15px;
   }
 
-  /* Tweak button sizes */
   .btn-lg {
     padding: 10px 20px;
     font-size: 1rem;
   }
 
-  /* Prevent big shadow on images from feeling too bulky */
   .product-img,
   .img-fluid.rounded.shadow {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -320,11 +295,12 @@
 
 @media (max-width: 768px) {
   html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto;
-    margin: 0;
-    padding: 0;
-  }
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* prevent horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+  height: auto !important;
+}
 
   /* Keep other elements restricted, but DO NOT restrict scroll-wrapper or scroll-track */
   .container, .container-fluid, .row, .col,
@@ -628,14 +604,6 @@ html {
   </div>
 </div>
 
-
-<!-- WhatsApp Floating Button (Mobile Only) -->
-<a href="https://wa.me/919821524678" 
-   class="whatsapp-float d-lg-none" 
-   target="_blank" 
-   title="Chat with us on WhatsApp">
-  <i class="fab fa-whatsapp whatsapp-icon"></i>
-</a>
 
 
 <script>
