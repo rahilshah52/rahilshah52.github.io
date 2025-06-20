@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- CSS Styles -->
+<!-- AOS CSS -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 <style>
   .product-img {
     height: 220px;
@@ -30,17 +31,30 @@
     background: #f1f1f1;
   }
 
-  .card img {
-    transition: transform 0.3s ease-in-out;
-  }
-
   .card:hover img {
     transform: scale(1.05);
   }
 
-  footer {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+  .card img {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .category-images {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .category-images h5 {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    padding-left: 8px;
+    color: #666;
+  }
+
+  .mobile-cat-btn.active {
+    background-color: #111;
+    color: #fff;
+    border-color: #111;
   }
 
   .modal-img {
@@ -50,10 +64,6 @@
     object-fit: contain;
   }
 
-  .category-images {
-    transition: opacity 0.3s ease-in-out;
-  }
-
   #backToTop {
     display: none;
     position: fixed;
@@ -61,33 +71,69 @@
     right: 30px;
     z-index: 99;
   }
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+.scroll-container {
+  scrollbar-width: none; /* Firefox */
+}
 
-  .mobile-cat-btn.active {
-    background-color: #111;
-    color: #fff;
-    border-color: #111;
+  /* Mobile view */
+  @media (max-width: 768px) {
+  .container {
+    padding: 0 8px;
+  }
+
+  #category-list {
+    display: none !important;
+  }
+
+  .mobile-cat-btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  #mobileCategoryScroll {
+    scrollbar-width: none;
+  }
+
+  #mobileCategoryScroll::-webkit-scrollbar {
+    display: none;
   }
 
   .scroll-container {
     flex-wrap: wrap;
-    gap: 14px;
+    justify-content: center;
     overflow-x: hidden;
-    justify-content: space-between;
+    gap: 16px;
+    padding: 0;
+    margin: 0;
   }
 
   .scroll-container .card {
-    flex: 0 0 48%;
-    background: white;
-    border-radius: 10px;
-    padding: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    flex: 0 0 100%;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
   }
 
   .scroll-container .product-img {
-    height: 160px;
-    border-radius: 10px;
     width: 100%;
+    height: 280px;
     object-fit: cover;
+    border-radius: 0;
+  }
+
+  .card-body {
+    padding: 6px 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #444;
   }
 
   .category-images {
@@ -99,41 +145,18 @@
   }
 
   .category-images h5 {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.6rem;
-    padding-left: 8px;
-    color: #666;
-  }
-
-  /* CTA section spacing fix */
-  .section.text-center {
-    padding-top: 3rem !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .mobile-cat-btn {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-    transition: all 0.3s;
-  }
-
-  #mobileCategoryScroll {
-    scrollbar-width: none; /* Firefox */
-  }
-
-  #mobileCategoryScroll::-webkit-scrollbar {
-    display: none; /* Chrome */
+    padding-left: 0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+    text-align: center;
   }
 }
 
 
 </style>
 
-<!-- Section: Category Buttons -->
 <div class="container mt-5">
   <div class="text-center mb-4">
     <h2 class="fw-semibold">Explore by Category</h2>
@@ -141,48 +164,56 @@
   </div>
 
   <div class="row">
- <!-- MOBILE HORIZONTAL CATEGORY SCROLL (Only shown on mobile) -->
-<div class="d-md-none px-2 mb-3">
-  <div class="d-flex overflow-auto gap-2 pb-2" id="mobileCategoryScroll">
-    {% for cat, data in product_images.items() %}
-    <button class="btn btn-outline-dark btn-sm flex-shrink-0 mobile-cat-btn" data-category="{{ cat }}">
-      {{ data.display_name }}
-    </button>
-    {% endfor %}
-  </div>
-</div>
+    <!-- Sidebar Category Buttons (Desktop) -->
+    <div class="col-md-3 mb-4 d-none d-md-block" id="category-list">
+      <div class="list-group">
+        {% for cat, data in product_images.items() %}
+        <button class="list-group-item list-group-item-action" data-category="{{ cat }}">
+          {{ data.display_name }}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
 
+    <!-- Horizontal Scroll Category Buttons (Mobile) -->
+    <div class="d-md-none px-2 mb-3">
+      <div class="d-flex overflow-auto gap-2 pb-2" id="mobileCategoryScroll">
+        {% for cat, data in product_images.items() %}
+        <button class="btn btn-outline-dark btn-sm flex-shrink-0 mobile-cat-btn" data-category="{{ cat }}">
+          {{ data.display_name }}
+        </button>
+        {% endfor %}
+      </div>
+    </div>
 
-  <!-- PRODUCT IMAGES -->
-  <div class="col-md-9 order-1 order-md-2">
-    {% for cat, data in product_images.items() %}
+    <!-- Product Display Area -->
+    <div class="col-md-9 order-1 order-md-2">
+      {% for cat, data in product_images.items() %}
       <div class="category-images" id="{{ cat }}-section" style="display: none;">
-        <h5 class="text-muted text-start mt-4 mb-2" style="font-size: 1rem;">{{ data.display_name }}</h5>
+        <h5 class="text-muted text-start mt-4 mb-2">{{ data.display_name }}</h5>
         <div class="scroll-container">
           {% for item in data["items"] %}
           <div class="card" style="min-width: 220px;" data-aos="fade-up">
             <img src="{{ url_for('static', filename='images/' + cat + '/' + item.filename) }}"
-                 class="img-fluid product-img rounded"
-                 alt="{{ item.code }}"
-                 loading="lazy"
-                 onclick="openModal(this.src, '{{ item.code }}')">
+              class="img-fluid product-img rounded" alt="{{ item.code }}"
+              loading="lazy" onclick="openModal(this.src, '{{ item.code }}')">
             <div class="card-body text-center small">{{ item.code }}</div>
           </div>
           {% endfor %}
         </div>
       </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
 
-  <!-- VIEW CATALOG BUTTON -->
-  <div class="col-12 order-3 mt-4 text-center">
-    <a id="catalogLink" href="/catalogs?cat=lighting" class="btn btn-outline-dark">
-      View Full Lighting Catalog →
-    </a>
+    <div class="col-12 order-3 mt-4 text-center">
+      <a id="catalogLink" href="/catalogs?cat=lighting" class="btn btn-outline-dark">
+        View Full Lighting Catalog →
+      </a>
+    </div>
   </div>
 </div>
 
-<!-- Modal for Image Preview -->
+<!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content bg-dark">
@@ -197,12 +228,7 @@
   </div>
 </div>
 
-<!-- Back to Top -->
-<button onclick="scrollToTop()" id="backToTop" class="btn btn-dark rounded-circle">
-  <i class="fas fa-chevron-up"></i>
-</button>
-
-<!-- CTA Section -->
+<!-- CTA -->
 <div class="section text-center bg-dark text-white mt-5 py-5">
   <div class="container" data-aos="fade-up">
     <h2 class="mb-3">Need Help Finding the Right Product?</h2>
@@ -211,7 +237,6 @@
   </div>
 </div>
 
-<!-- JS Scripts -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
   AOS.init();
@@ -227,23 +252,14 @@
 
   categoryButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const selectedCategory = button.getAttribute('data-category');
-      categorySections.forEach(section => {
-        section.classList.remove("active");
-        section.style.display = 'none';
-      });
-      const target = document.getElementById(selectedCategory + '-section');
-      if (target) {
-        target.style.display = 'block';
-        setTimeout(() => target.classList.add("active"), 10);
-      }
+      const selected = button.getAttribute('data-category');
+      categorySections.forEach(section => section.style.display = 'none');
+      const section = document.getElementById(selected + '-section');
+      if (section) section.style.display = 'block';
 
-      localStorage.setItem('activeCategory', selectedCategory);
-
-      const catalogBtn = document.getElementById('catalogLink');
-      const capitalized = selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1);
-      catalogBtn.innerText = `View Full ${capitalized} Catalog →`;
-      catalogBtn.href = `/catalogs?cat=${selectedCategory}`;
+      localStorage.setItem('activeCategory', selected);
+      document.getElementById('catalogLink').innerText = `View Full ${selected.charAt(0).toUpperCase() + selected.slice(1)} Catalog →`;
+      document.getElementById('catalogLink').href = `/catalogs?cat=${selected}`;
 
       categoryButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
@@ -252,23 +268,12 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const category = urlParams.get('category');
-    const stored = localStorage.getItem('activeCategory');
-    const openCategory = category || stored || 'bedroom';
-    const btn = document.querySelector(`[data-category="${openCategory}"]`);
+    const category = urlParams.get('category') || localStorage.getItem('activeCategory') || Object.keys({{ product_images|tojson }}).at(0);
+    const btn = document.querySelector(`[data-category="${category}"]`);
     if (btn) btn.click();
-    if (!category) localStorage.removeItem('activeCategory');
   });
 
-  window.onscroll = function () {
-    const btn = document.getElementById("backToTop");
-    btn.style.display = (document.documentElement.scrollTop > 100) ? "block" : "none";
-  };
-
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
+  // Enable horizontal scroll with mouse wheel
   document.querySelectorAll('.scroll-container').forEach(container => {
     container.addEventListener('wheel', function (e) {
       if (e.deltaY !== 0) {
@@ -277,28 +282,6 @@
       }
     }, { passive: false });
   });
-
-
-// MOBILE: tap to switch category view
-if (window.innerWidth <= 768) {
-  const mobileButtons = document.querySelectorAll('.mobile-cat-btn');
-  mobileButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const selected = button.getAttribute('data-category');
-      document.querySelectorAll('.category-images').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.querySelector(`#${selected}-section`)?.classList.add('active');
-
-      mobileButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-    });
-  });
-
-  // Optionally show first category by default
-  mobileButtons[0]?.click();
-}
-
 </script>
 
 {% endblock %}
