@@ -100,10 +100,14 @@
 .scroll-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
-  position: relative;
-  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE/Edge */
+}
+.scroll-wrapper::-webkit-scrollbar {
+  display: none;                  /* Chrome/Safari */
 }
 
 .scroll-track {
@@ -122,14 +126,6 @@
   width: 220px;
   transition: transform 0.3s ease;
   scroll-snap-align: start;
-}
-
-.scroll-item img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .scroll-item:hover {
@@ -418,6 +414,25 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .scroll-wrapper,
+  .scroll-track,
+  .scroll-item {
+    overflow-y: hidden !important;
+    max-height: 100% !important;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
 
 </style>
 
