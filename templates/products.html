@@ -61,6 +61,125 @@
     right: 30px;
     z-index: 99;
   }
+
+  @media (max-width: 768px) {
+  .scroll-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    overflow-x: hidden !important;
+  }
+
+  .card {
+    flex: 0 0 45%;
+    margin-bottom: 1rem;
+  }
+
+  .product-img {
+    height: 160px;
+  }
+
+  .card-body.small {
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 768px) {
+  .row > .col-md-3 {
+    order: 2;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .row > .col-md-9 {
+    order: 1;
+    width: 100%;
+  }
+
+  #category-list {
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-bottom: 10px;
+  }
+
+  #category-list .list-group-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+  }
+
+  #category-list .list-group-item.active {
+    background-color: #333;
+    color: white;
+  }
+}
+@media (max-width: 576px) {
+  .scroll-container {
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 0.8rem;
+  }
+
+  .card {
+    min-width: 180px !important;
+  }
+
+  .card .card-body {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.25rem;
+  }
+
+  .product-img {
+    height: 160px;
+  }
+}
+@media (max-width: 576px) {
+  footer {
+    margin-top: 2rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+    font-size: 0.9rem;
+  }
+
+  .section.text-center.bg-dark {
+    padding: 40px 15px !important;
+  }
+
+  .section.text-center.bg-dark h2 {
+    font-size: 1.3rem;
+  }
+
+  .section.text-center.bg-dark p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .section.text-center.bg-dark .btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}
+@media (max-width: 576px) {
+  .modal-img {
+    width: 100vw;
+    max-height: 75vh;
+    border-radius: 0;
+  }
+
+  .modal-content.bg-dark {
+    padding: 0;
+  }
+
+  .modal-header {
+    padding: 10px 16px;
+  }
+}
+
 </style>
 
 <!-- Section: Category Buttons -->
@@ -166,6 +285,9 @@
       const capitalized = selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1);
       catalogBtn.innerText = `View Full ${capitalized} Catalog →`;
       catalogBtn.href = `/catalogs?cat=${selectedCategory}`;
+      // 🔥 Highlight active button
+    categoryButtons.forEach(btn => btn.classList.remove('active'));  
+    button.classList.add('active');
     });
   });
 

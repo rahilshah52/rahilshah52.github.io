@@ -98,7 +98,10 @@
   }
   
 .scroll-wrapper {
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
   position: relative;
   width: 100%;
 }
@@ -106,19 +109,19 @@
 .scroll-track {
   display: flex;
   gap: 2rem;
-  animation: scroll-left 40s linear infinite;
-  will-change: transform;
   width: max-content;
-  animation-play-state: running; /* This allows manual pausing/resuming */
-  touch-action: pan-x; /* Enables horizontal scroll on mobile */
-  overflow-x: auto;
-}
+  animation: scroll-left 40s linear infinite;
+  animation-play-state: running;
+  scroll-snap-align: start;
+  scroll-behavior: smooth;
+  will-change: transform;}
 
 
 .scroll-item {
   flex: 0 0 auto;
   width: 220px;
   transition: transform 0.3s ease;
+  scroll-snap-align: start;
 }
 
 .scroll-item img {
@@ -331,6 +334,90 @@
   }
 }
 
+@media (max-width: 576px) {
+  .section.bg-light .row.g-4 > div {
+    text-align: center;
+    padding: 15px 5px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .section.bg-light .row.g-4 > div:last-child {
+    border-bottom: none;
+  }
+
+  .section.bg-light .row.g-4 img {
+    max-width: 80px;
+    height: auto;
+    margin-bottom: 8px;
+  }
+
+  .section.bg-light .row.g-4 p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .section.bg-light .mt-4 a {
+    font-size: 1rem;
+    display: inline-block;
+    margin-top: 12px;
+  }
+}
+.card img {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 576px) {
+  .card {
+    padding: 10px !important;
+  }
+
+  .card img {
+    height: 100px;
+    object-fit: contain;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  p, .lead, .fw-semibold {
+    font-size: 0.92rem !important;
+    line-height: 1.5;
+  }
+
+  .section-title {
+    font-size: 1.35rem !important;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+  }
+
+  .btn-lg {
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .btn:hover {
+    transform: scale(1.03);
+    transition: all 0.2s ease;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 
 </style>
 
@@ -405,52 +492,64 @@
   </div>
 </div>
   
-<!-- Our Services Section -->
+<!-- Our Services Section - Updated for Better Mobile UX -->
 <div class="section text-center bg-light" data-aos="fade-up">
   <div class="container">
     <h2 class="section-title">Our Services</h2>
-    <div class="row g-4">
-      <div class="col-md-3 col-6">
-        <img src="{{ url_for('static', filename='images/services/custom.webp') }}" class="img-fluid mb-2" alt="Custom Design">
-        <p class="fw-semibold">Custom Design</p>
+    <div class="row g-4 justify-content-center">
+      {% set services = [
+        ("custom.webp", "Custom Design"),
+        ("global.webp", "Global Sourcing"),
+        ("logistics.webp", "Logistics & Shipping"),
+        ("support.webp", "End-to-End Service")
+      ] %}
+      {% for img, label in services %}
+      <div class="col-6 col-md-3">
+        <a href="/services" style="text-decoration: none; color: inherit;">
+          <div class="card border-0 shadow-sm h-100 p-2 rounded-4">
+            <img src="{{ url_for('static', filename='images/services/' + img) }}" class="img-fluid rounded-3 mb-2" alt="{{ label }}">
+            <p class="fw-semibold mb-0">{{ label }}</p>
+          </div>
+        </a>
       </div>
-      <div class="col-md-3 col-6">
-        <img src="{{ url_for('static', filename='images/services/global.webp') }}" class="img-fluid mb-2" alt="Sourcing">
-        <p class="fw-semibold">Global Sourcing</p>
-      </div>
-      <div class="col-md-3 col-6">
-        <img src="{{ url_for('static', filename='images/services/logistics.webp') }}" class="img-fluid mb-2" alt="Shipping">
-        <p class="fw-semibold">Logistics & Shipping</p>
-      </div>
-      <div class="col-md-3 col-6">
-        <img src="{{ url_for('static', filename='images/services/support.webp') }}" class="img-fluid mb-2" alt="Support">
-        <p class="fw-semibold">End-to-End Service</p>
-      </div>
+      {% endfor %}
     </div>
     <div class="mt-4">
-      <a href="/services" style="text-decoration: none; color: black; font-weight: 1000; font-size: 1.2rem;">
+      <a href="/services" class="btn btn-dark px-4 py-2 rounded-pill fw-semibold">
         End-to-End Service →
       </a>
     </div>
   </div>
 </div>
 
-
-<!-- Showroom CTA -->
+<!-- Showroom CTA - Updated -->
 <div class="container section text-center" data-aos="fade-up">
   <h2 class="section-title">Visit Our Foshan Showroom</h2>
-  <p>Experience our curated collection first-hand in China’s design capital.</p>
-  <a href="/showroom" class="section-link">Plan Your Visit →</a>
+  <p class="mb-3">Experience our curated collection first-hand in China’s design capital.</p>
+  <a href="/showroom" class="btn btn-outline-dark fw-semibold px-4 py-2 rounded-pill">
+    Plan Your Visit →
+  </a>
 </div>
 
-<!-- Contact Section -->
-<div class="section text-center">
+
+<!-- Contact Section - Refined -->
+<div class="section text-center bg-white">
   <div class="container" data-aos="fade-up">
     <h2 class="section-title">Get in Touch</h2>
-    <p>Email us at <a href="mailto:uniglobelifestyles@gmail.com">uniglobelifestyles@gmail.com</a><br>
-    Or chat with us directly via WhatsApp.</p>
+    <p class="mb-3">
+      Email us at<br>
+      <a href="mailto:uniglobelifestyles@gmail.com" class="fw-semibold">
+        uniglobelifestyles@gmail.com
+      </a>
+      <br>
+      Or message us on WhatsApp anytime.
+    </p>
+    <a href="https://wa.me/919821524678" target="_blank" class="btn btn-success rounded-pill px-4 py-2">
+      Chat on WhatsApp
+    </a>
   </div>
 </div>
+
 
 <!-- WhatsApp Floating Button (Mobile Only) -->
 <a href="https://wa.me/919821524678" 
