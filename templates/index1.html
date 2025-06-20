@@ -13,12 +13,34 @@
     font-family: 'Inter', sans-serif;
     color: #333;
   }
-  .hero {
-    background: url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
-    color: white;
-    padding: 140px 20px;
-    text-align: center;
-  }
+.hero {
+  position: relative;
+  height: auto;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+
+.hero-bg {
+  background: url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.3); /* fallback if image fails */
+  background-blend-mode: darken; /* darkens just the image */
+  filter: brightness(1); /* reduce brightness further */
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 140px 20px;
+}
+
+
   .section {
     padding: 60px 0;
   }
@@ -457,15 +479,33 @@ html {
     animation-play-state: running;
   }
 }
+@media (max-width: 576px) {
+  .row.gx-2 img {
+    margin-bottom: 4px;
+  }
+
+  .row.gx-2 small {
+    font-size: 0.85rem;
+  }
+
+  .section .btn {
+    margin-top: 16px;
+  }
+}
+
 
 </style>
 
 <!-- Hero -->
-<div class="hero" data-aos="fade-in">
-  <h1 class="display-5">Global Sourcing, Seamless Delivery</h1>
-  <p class="lead mt-3">Luxury Furniture, Lighting & Interior Solutions – Delivered Internationally</p>
-  <a href="/contact" class="btn btn-light btn-lg mt-4">Get a Quote</a>
+<div class="hero">
+  <div class="hero-bg"></div> <!-- New background layer -->
+  <div class="hero-content" data-aos="fade-in"> <!-- Content wrapper -->
+    <h1 class="display-5">Global Sourcing, Seamless Delivery</h1>
+    <p class="lead mt-3">Luxury Furniture, Lighting & Interior Solutions – Delivered Internationally</p>
+    <a href="/contact" class="btn btn-light btn-lg mt-4">Get a Quote</a>
+  </div>
 </div>
+
 
 <!-- About Section -->
 <div class="container section">
@@ -531,28 +571,64 @@ html {
   </div>
 </div>
   
-<!-- Our Services Section - Updated for Better Mobile UX -->
+<!-- Our Services Section -->
 <div class="section text-center bg-light" data-aos="fade-up">
   <div class="container">
     <h2 class="section-title">Our Services</h2>
-    <div class="row g-4 justify-content-center">
-      {% set services = [
-        ("custom.webp", "Custom Design"),
-        ("global.webp", "Global Sourcing"),
-        ("logistics.webp", "Logistics & Shipping"),
-        ("support.webp", "End-to-End Service")
-      ] %}
-      {% for img, label in services %}
-      <div class="col-6 col-md-3">
-        <a href="/services" style="text-decoration: none; color: inherit;">
-          <div class="card border-0 shadow-sm h-100 p-2 rounded-4">
-            <img src="{{ url_for('static', filename='images/services/' + img) }}" class="img-fluid rounded-3 mb-2" alt="{{ label }}">
-            <p class="fw-semibold mb-0">{{ label }}</p>
-          </div>
-        </a>
+
+    <!-- DESKTOP VERSION -->
+    <div class="d-none d-sm-block">
+      <div class="row g-4 justify-content-center">
+        {% set services = [
+          ("custom.webp", "Custom Design"),
+          ("global.webp", "Global Sourcing"),
+          ("logistics.webp", "Logistics & Shipping"),
+          ("support.webp", "End-to-End Service")
+        ] %}
+        {% for img, label in services %}
+        <div class="col-6 col-md-3">
+          <a href="/services" style="text-decoration: none; color: inherit;">
+            <div class="card border-0 shadow-sm h-100 p-2 rounded-4">
+              <img src="{{ url_for('static', filename='images/services/' + img) }}" class="img-fluid rounded-3 mb-2" alt="{{ label }}">
+              <p class="fw-semibold mb-0">{{ label }}</p>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
+
+    <!-- MOBILE VERSION -->
+    <div class="d-sm-none">
+      <div class="row text-center gx-2 gy-3 justify-content-center">
+        <div class="col-3">
+          <a href="/services" style="text-decoration: none; color: inherit;">
+            <img src="{{ url_for('static', filename='images/services/custom.webp') }}" alt="Custom Design" class="img-fluid mb-2" style="max-height: 50px;">
+            <small class="fw-semibold">Custom</small>
+          </a>
+        </div>
+        <div class="col-3">
+          <a href="/services" style="text-decoration: none; color: inherit;">
+            <img src="{{ url_for('static', filename='images/services/global.webp') }}" alt="Global Sourcing" class="img-fluid mb-2" style="max-height: 50px;">
+            <small class="fw-semibold">Sourcing</small>
+          </a>
+        </div>
+        <div class="col-3">
+          <a href="/services" style="text-decoration: none; color: inherit;">
+            <img src="{{ url_for('static', filename='images/services/logistics.webp') }}" alt="Logistics & Shipping" class="img-fluid mb-2" style="max-height: 50px;">
+            <small class="fw-semibold">Shipping</small>
+          </a>
+        </div>
+        <div class="col-3">
+          <a href="/services" style="text-decoration: none; color: inherit;">
+            <img src="{{ url_for('static', filename='images/services/support.webp') }}" alt="End-to-End Service" class="img-fluid mb-2" style="max-height: 50px;">
+            <small class="fw-semibold">Support</small>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shared button -->
     <div class="mt-4">
       <a href="/services" class="btn btn-dark px-4 py-2 rounded-pill fw-semibold">
         End-to-End Service →
@@ -602,58 +678,56 @@ html {
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const track = document.getElementById("scrollTrack");
-    let isTouching = false;
-    let touchTimeout;
-    let scrollAmount = 1;
-    let autoScroll;
+    let autoScrollInterval;
+
+    function startAutoScroll() {
+      // Clear if already running
+      clearInterval(autoScrollInterval);
+
+      autoScrollInterval = setInterval(() => {
+        // Scroll right
+        track.scrollLeft += 1;
+
+        // Loop back to start if at end
+        if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 1) {
+          track.scrollLeft = 0;
+        }
+      }, 20); // Adjust speed here
+    }
 
     function pauseAutoScroll() {
-      if (window.innerWidth >= 768) {
-        track.style.animationPlayState = "paused";
-      } else {
-        clearInterval(autoScroll);
-      }
+      clearInterval(autoScrollInterval);
     }
 
     function resumeAutoScroll() {
-      if (window.innerWidth >= 768) {
-        track.style.animationPlayState = "running";
-      } else {
-        startAutoScroll();
-      }
-    }
-
-    function startAutoScroll() {
-      autoScroll = setInterval(() => {
-        track.scrollLeft += scrollAmount;
-        if (track.scrollLeft + track.clientWidth >= track.scrollWidth || track.scrollLeft <= 0) {
-          scrollAmount = -scrollAmount;
-        }
-      }, 30);
-    }
-
-    // Enable auto-scroll on mobile only
-    if (window.innerWidth < 768) {
       startAutoScroll();
     }
 
-    // Touch interactions on mobile
-    track.addEventListener("touchstart", () => {
-      isTouching = true;
-      pauseAutoScroll();
-      clearTimeout(touchTimeout);
-    });
+    // Auto-scroll only on mobile
+    if (window.innerWidth < 768) {
+      startAutoScroll();
 
-    track.addEventListener("touchend", () => {
-      isTouching = false;
-      touchTimeout = setTimeout(() => {
-        if (!isTouching && window.innerWidth < 768) {
-          resumeAutoScroll();
-        }
-      }, 2000);
-    });
+      // Pause on touch
+      let isTouching = false;
+      let touchTimeout;
+
+      track.addEventListener("touchstart", () => {
+        isTouching = true;
+        pauseAutoScroll();
+        clearTimeout(touchTimeout);
+      });
+
+      track.addEventListener("touchend", () => {
+        isTouching = false;
+        touchTimeout = setTimeout(() => {
+          if (!isTouching) resumeAutoScroll();
+        }, 2000);
+      });
+    }
   });
 </script>
+
+
 
 
 {% endblock %}
