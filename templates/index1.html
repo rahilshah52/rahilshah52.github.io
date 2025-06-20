@@ -280,9 +280,18 @@
 
 }
 
-/* Prevent horizontal scroll globally on mobile */
 @media (max-width: 768px) {
   html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Keep other elements restricted, but DO NOT restrict scroll-wrapper or scroll-track */
+  .container, .container-fluid, .row, .col,
+  img, section {
+    max-width: 100% !important;
     overflow-x: hidden !important;
   }
 
@@ -290,13 +299,21 @@
     box-sizing: border-box;
   }
 
-  .container, .container-fluid, .row, .col,
-  .scroll-wrapper, .scroll-track,
-  img, section, div {
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+  /* ALLOW scroll-wrapper to scroll horizontally */
+  .scroll-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .scroll-track {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    will-change: transform;
   }
 }
+
 
 @media (max-width: 576px) {
   .about-dark {
