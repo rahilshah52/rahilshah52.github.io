@@ -3,9 +3,6 @@
 
 <!-- Fonts and AOS -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>AOS.init();</script>
 
 
 <style>
@@ -14,7 +11,7 @@
     color: #333;
   }
   .hero {
-    background: url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("{{ url_for('static', filename='images/hero.png') }}") no-repeat center center / cover;
     color: white;
     padding: 140px 20px;
     text-align: center;
@@ -281,36 +278,58 @@
 }
 
 @media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden !important;
+  /* General body overflow: Allow content to scroll, but don't force horizontal scroll */
+  body {
+    overflow-x: hidden; /* Remove !important */
     overflow-y: auto;
-    margin: 0;
-    padding: 0;
   }
 
-  /* Keep other elements restricted, but DO NOT restrict scroll-wrapper or scroll-track */
-  .container, .container-fluid, .row, .col,
+  /* Containers, rows, cols should generally not have horizontal overflow */
+  .container, .container-fluid, .row, .col {
+    max-width: 100%;
+    overflow-x: hidden; /* Remove !important. Apply only if needed to prevent specific content from escaping. */
+  }
+
+  /* Images and sections usually scale, no need for overflow-x hidden on them directly */
   img, section {
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+    max-width: 100%;
+    height: auto; /* Ensures images scale properly */
   }
 
-  * {
-    box-sizing: border-box;
-  }
-
-  /* ALLOW scroll-wrapper to scroll horizontally */
+  /* === CRITICAL FOR THE CAROUSEL SCROLLING === */
   .scroll-wrapper {
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+    overflow-x: auto; /* This ALLOWS horizontal scrolling */
+    overflow-y: hidden; /* Prevents vertical scrollbar from appearing for this section */
+    -webkit-overflow-scrolling: touch; /* Improves native-like scrolling on iOS */
+    scroll-snap-type: x mandatory; /* Keep if you want snap effect */
+    scrollbar-width: none; /* Firefox: Hides scrollbar */
+    -ms-overflow-style: none; /* IE/Edge: Hides scrollbar */
+  }
+
+  .scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome/Safari: Hides scrollbar */
   }
 
   .scroll-track {
     display: flex;
-    gap: 2rem;
-    width: max-content;
-    will-change: transform;
+    gap: 2rem; /* Ensure this matches your desired spacing */
+    width: max-content; /* Allows track to be wider than wrapper for scrolling */
+    will-change: transform; /* Performance hint for browser */
+    animation: none !important; /* !!! Crucial: Disable desktop CSS animation on mobile !!! */
+  }
+
+  /* Ensure box-sizing is always applied */
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* === Desktop Animation Re-application === */
+/* This rule must be separate and *only* apply on desktop */
+@media (min-width: 769px) {
+  .scroll-track {
+    animation: scroll-left 40s linear infinite;
+    animation-play-state: running;
   }
 }
 
@@ -602,56 +621,96 @@ html {
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const track = document.getElementById("scrollTrack");
-    let isTouching = false;
-    let touchTimeout;
-    let scrollAmount = 1;
-    let autoScroll;
 
-    function pauseAutoScroll() {
-      if (window.innerWidth >= 768) {
-        track.style.animationPlayState = "paused";
-      } else {
-        clearInterval(autoScroll);
+    // Only proceed if the scrollTrack element exists on this page
+    if (track) {
+      let autoScrollInterval; // For mobile JS scrolling
+      let isTouching = false; // Flag for mobile touch
+      let touchTimeout;       // Timeout for mobile touch resume
+      const scrollSpeed = 1;  // Adjust mobile scroll speed: higher = faster
+
+      // Calculate the width of one full set of items for seamless mobile loop
+      let contentWidth = 0;
+      const trackStyle = getComputedStyle(track);
+      const gapValue = parseFloat(trackStyle.gap) || 0;
+
+      for (let i = 0; i < track.children.length / 2; i++) {
+        contentWidth += track.children[i].offsetWidth + gapValue;
       }
-    }
+      contentWidth -= gapValue; // Adjust for the last gap added in the loop
 
-    function resumeAutoScroll() {
-      if (window.innerWidth >= 768) {
-        track.style.animationPlayState = "running";
-      } else {
-        startAutoScroll();
+      // --- Mobile Auto-Scroll Functions (JS-based) ---
+      function startAutoScrollMobile() {
+        if (autoScrollInterval) clearInterval(autoScrollInterval);
+
+        autoScrollInterval = setInterval(() => {
+          track.scrollLeft += scrollSpeed;
+          if (track.scrollLeft >= contentWidth) {
+            track.scrollLeft = 0;
+          }
+        }, 30); // Milliseconds per step
       }
-    }
 
-    function startAutoScroll() {
-      autoScroll = setInterval(() => {
-        track.scrollLeft += scrollAmount;
-        if (track.scrollLeft + track.clientWidth >= track.scrollWidth || track.scrollLeft <= 0) {
-          scrollAmount = -scrollAmount;
+      function stopAutoScrollMobile() {
+        clearInterval(autoScrollInterval);
+      }
+
+      // --- Handle Screen Size Changes (Desktop CSS vs. Mobile JS) ---
+      function handleScreenSize() {
+        if (window.innerWidth < 769) { // Mobile View
+          // 1. Stop any desktop CSS animation
+          track.style.animationPlayState = "paused";
+          track.style.animation = "none"; // Explicitly remove CSS animation property
+          
+          // 2. Start mobile JavaScript auto-scroll
+          startAutoScrollMobile();
+
+        } else { // Desktop View (769px and above)
+          // 1. Stop mobile JavaScript auto-scroll
+          stopAutoScrollMobile();
+
+          // 2. Ensure desktop CSS animation is applied and running
+          // Only set the animation property if it's not already correct, to avoid flicker/restarts
+          if (track.style.animation !== "scroll-left 40s linear infinite") {
+              track.style.animation = "scroll-left 40s linear infinite";
+          }
+          track.style.animationPlayState = "running";
+
+          // 3. Re-attach desktop hover listeners if not already present
+          // We moved these out of the DOMContentLoaded global listener in base.html
+          // so they need to be managed here, but only once.
+          if (!track.__desktopListenersAdded) { // Custom flag to prevent multiple attachments
+            track.addEventListener('mouseenter', () => {
+              track.style.animationPlayState = 'paused';
+            });
+            track.addEventListener('mouseleave', () => {
+              track.style.animationPlayState = 'running';
+            });
+            track.__desktopListenersAdded = true; // Mark as added
+          }
         }
-      }, 30);
+      }
+
+      // --- Mobile Touch Interactions (to pause/resume auto-scroll) ---
+      track.addEventListener("touchstart", () => {
+        isTouching = true;
+        stopAutoScrollMobile();
+        clearTimeout(touchTimeout);
+      }, { passive: true });
+
+      track.addEventListener("touchend", () => {
+        isTouching = false;
+        touchTimeout = setTimeout(() => {
+          if (!isTouching && window.innerWidth < 769) { // Only resume on mobile
+            startAutoScrollMobile();
+          }
+        }, 2000); // Resume after 2 seconds
+      });
+
+      // --- Event Listeners ---
+      window.addEventListener('resize', handleScreenSize); // Recalculate on resize
+      handleScreenSize(); // Initial setup on page load
     }
-
-    // Enable auto-scroll on mobile only
-    if (window.innerWidth < 768) {
-      startAutoScroll();
-    }
-
-    // Touch interactions on mobile
-    track.addEventListener("touchstart", () => {
-      isTouching = true;
-      pauseAutoScroll();
-      clearTimeout(touchTimeout);
-    });
-
-    track.addEventListener("touchend", () => {
-      isTouching = false;
-      touchTimeout = setTimeout(() => {
-        if (!isTouching && window.innerWidth < 768) {
-          resumeAutoScroll();
-        }
-      }, 2000);
-    });
   });
 </script>
 
