@@ -473,12 +473,10 @@ html {
     box-sizing: border-box;
   }
 }
-@media (min-width: 769px) {
-  .scroll-track {
-    animation: scroll-left 40s linear infinite;
-    animation-play-state: running;
-  }
+.scroll-track {
+  animation: scroll-left 40s linear infinite;
 }
+
 @media (max-width: 576px) {
   .row.gx-2 img {
     margin-bottom: 4px;
@@ -490,6 +488,44 @@ html {
 
   .section .btn {
     margin-top: 16px;
+  }
+}
+
+html, body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.scroll-wrapper, .scroll-track {
+  overflow: visible !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 576px) {
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .section .row {
+    margin: 0;
+  }
+
+  .section .col-3 {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -603,30 +639,43 @@ html {
       <div class="row text-center gx-2 gy-3 justify-content-center">
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
-            <img src="{{ url_for('static', filename='images/services/custom.webp') }}" alt="Custom Design" class="img-fluid mb-2" style="max-height: 50px;">
-            <small class="fw-semibold">Custom</small>
+            <img src="{{ url_for('static', filename='images/services/custom.webp') }}" alt="Custom Design"
+                 class="img-fluid mb-1" style="max-height: 70px;">
+            <small class="fw-semibold d-block mt-1">Custom</small>
           </a>
         </div>
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
-            <img src="{{ url_for('static', filename='images/services/global.webp') }}" alt="Global Sourcing" class="img-fluid mb-2" style="max-height: 50px;">
-            <small class="fw-semibold">Sourcing</small>
+            <img src="{{ url_for('static', filename='images/services/global.webp') }}" alt="Global Sourcing"
+                 class="img-fluid mb-1" style="max-height: 70px;">
+            <small class="fw-semibold d-block mt-1">Sourcing</small>
           </a>
         </div>
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
-            <img src="{{ url_for('static', filename='images/services/logistics.webp') }}" alt="Logistics & Shipping" class="img-fluid mb-2" style="max-height: 50px;">
-            <small class="fw-semibold">Shipping</small>
+            <img src="{{ url_for('static', filename='images/services/logistics.webp') }}" alt="Logistics & Shipping"
+                 class="img-fluid mb-1" style="max-height: 70px;">
+            <small class="fw-semibold d-block mt-1">Shipping</small>
           </a>
         </div>
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
-            <img src="{{ url_for('static', filename='images/services/support.webp') }}" alt="End-to-End Service" class="img-fluid mb-2" style="max-height: 50px;">
-            <small class="fw-semibold">Support</small>
+            <img src="{{ url_for('static', filename='images/services/support.webp') }}" alt="End-to-End Service"
+                 class="img-fluid mb-1" style="max-height: 70px;">
+            <small class="fw-semibold d-block mt-1">Support</small>
           </a>
         </div>
       </div>
+
+      <div class="mt-4">
+        <a href="/services" class="btn btn-dark px-4 py-2 rounded-pill fw-semibold">
+          View Full Services →
+        </a>
+      </div>
     </div>
+  </div>
+</div>
+
 
     <!-- Shared button -->
     <div class="mt-4">
@@ -674,58 +723,6 @@ html {
   <i class="fab fa-whatsapp whatsapp-icon"></i>
 </a>
 
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const track = document.getElementById("scrollTrack");
-    let autoScrollInterval;
-
-    function startAutoScroll() {
-      // Clear if already running
-      clearInterval(autoScrollInterval);
-
-      autoScrollInterval = setInterval(() => {
-        // Scroll right
-        track.scrollLeft += 1;
-
-        // Loop back to start if at end
-        if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 1) {
-          track.scrollLeft = 0;
-        }
-      }, 20); // Adjust speed here
-    }
-
-    function pauseAutoScroll() {
-      clearInterval(autoScrollInterval);
-    }
-
-    function resumeAutoScroll() {
-      startAutoScroll();
-    }
-
-    // Auto-scroll only on mobile
-    if (window.innerWidth < 768) {
-      startAutoScroll();
-
-      // Pause on touch
-      let isTouching = false;
-      let touchTimeout;
-
-      track.addEventListener("touchstart", () => {
-        isTouching = true;
-        pauseAutoScroll();
-        clearTimeout(touchTimeout);
-      });
-
-      track.addEventListener("touchend", () => {
-        isTouching = false;
-        touchTimeout = setTimeout(() => {
-          if (!isTouching) resumeAutoScroll();
-        }, 2000);
-      });
-    }
-  });
-</script>
 
 
 
