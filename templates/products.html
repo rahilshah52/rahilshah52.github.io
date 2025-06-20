@@ -204,13 +204,6 @@
 .category-images.active {
   opacity: 1;
 }
-categorySections.forEach(section => {
-  section.classList.remove("active");
-  section.style.display = "none";
-});
-const target = document.getElementById(selectedCategory + '-section');
-target.style.display = 'block';
-setTimeout(() => target.classList.add("active"), 10);
 
 #category-list {
   position: sticky;
@@ -321,23 +314,32 @@ setTimeout(() => target.classList.add("active"), 10);
   const categorySections = document.querySelectorAll('.category-images');
 
   categoryButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const selectedCategory = button.getAttribute('data-category');
+  button.addEventListener('click', () => {
+    const selectedCategory = button.getAttribute('data-category');
 
-      categorySections.forEach(section => section.style.display = 'none');
-      document.getElementById(selectedCategory + '-section').style.display = 'block';
-
-      localStorage.setItem('activeCategory', selectedCategory);
-
-      const catalogBtn = document.getElementById('catalogLink');
-      const capitalized = selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1);
-      catalogBtn.innerText = `View Full ${capitalized} Catalog →`;
-      catalogBtn.href = `/catalogs?cat=${selectedCategory}`;
-      // 🔥 Highlight active button
-    categoryButtons.forEach(btn => btn.classList.remove('active'));  
-    button.classList.add('active');
+    categorySections.forEach(section => {
+      section.classList.remove("active");
+      section.style.display = 'none';
     });
+
+    const target = document.getElementById(selectedCategory + '-section');
+    if (target) {
+      target.style.display = 'block';
+      setTimeout(() => target.classList.add("active"), 10); // fade-in
+    }
+
+    localStorage.setItem('activeCategory', selectedCategory);
+
+    const catalogBtn = document.getElementById('catalogLink');
+    const capitalized = selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1);
+    catalogBtn.innerText = `View Full ${capitalized} Catalog →`;
+    catalogBtn.href = `/catalogs?cat=${selectedCategory}`;
+
+    categoryButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
   });
+});
+
 
   window.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -359,6 +361,19 @@ setTimeout(() => target.classList.add("active"), 10);
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+
+
+// Enable horizontal scroll with mouse wheel when hovering over product rows
+document.querySelectorAll('.scroll-container').forEach(container => {
+  container.addEventListener('wheel', function (e) {
+    if (e.deltaY !== 0) {
+      e.preventDefault();
+      container.scrollLeft += e.deltaY;
+    }
+  }, { passive: false });
+});
+
 </script>
 
 {% endblock %}

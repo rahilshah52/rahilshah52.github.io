@@ -491,16 +491,19 @@ html {
   }
 }
 
-html, body {
-  overflow-x: hidden;
-  overflow-y: auto;
-  width: 100%;
-  max-width: 100%;
+.scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
-.scroll-wrapper, .scroll-track {
-  overflow: visible !important;
+.scroll-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
 }
+
 
 * {
   box-sizing: border-box;
@@ -632,6 +635,13 @@ html, body {
         </div>
         {% endfor %}
       </div>
+      <!-- ✅ Button inside the desktop block -->
+  <div class="mt-4">
+    <a href="/services" class="btn btn-dark px-4 py-2 rounded-pill fw-semibold">
+      End-to-End Service →
+    </a>
+  </div>
+</div>
     </div>
 
     <!-- MOBILE VERSION -->
@@ -640,42 +650,32 @@ html, body {
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
             <img src="{{ url_for('static', filename='images/services/custom.webp') }}" alt="Custom Design"
-                 class="img-fluid mb-1" style="max-height: 70px;">
+                 class="img-fluid mb-1" style="max-height: 80px;">
             <small class="fw-semibold d-block mt-1">Custom</small>
           </a>
         </div>
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
             <img src="{{ url_for('static', filename='images/services/global.webp') }}" alt="Global Sourcing"
-                 class="img-fluid mb-1" style="max-height: 70px;">
+                 class="img-fluid mb-1" style="max-height: 80px;">
             <small class="fw-semibold d-block mt-1">Sourcing</small>
           </a>
         </div>
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
             <img src="{{ url_for('static', filename='images/services/logistics.webp') }}" alt="Logistics & Shipping"
-                 class="img-fluid mb-1" style="max-height: 70px;">
+                 class="img-fluid mb-1" style="max-height: 80px;">
             <small class="fw-semibold d-block mt-1">Shipping</small>
           </a>
         </div>
         <div class="col-3">
           <a href="/services" style="text-decoration: none; color: inherit;">
             <img src="{{ url_for('static', filename='images/services/support.webp') }}" alt="End-to-End Service"
-                 class="img-fluid mb-1" style="max-height: 70px;">
+                 class="img-fluid mb-1" style="max-height: 80px;">
             <small class="fw-semibold d-block mt-1">Support</small>
           </a>
         </div>
       </div>
-
-      <div class="mt-4">
-        <a href="/services" class="btn btn-dark px-4 py-2 rounded-pill fw-semibold">
-          View Full Services →
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
 
     <!-- Shared button -->
     <div class="mt-4">
@@ -722,9 +722,6 @@ html, body {
    title="Chat with us on WhatsApp">
   <i class="fab fa-whatsapp whatsapp-icon"></i>
 </a>
-
-
-
 
 
 {% endblock %}
