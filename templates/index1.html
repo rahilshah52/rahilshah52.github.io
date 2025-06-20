@@ -100,25 +100,26 @@
 .scroll-wrapper {
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
   touch-action: pan-x;
-  scrollbar-width: none;          /* Firefox */
-  -ms-overflow-style: none;       /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
+
 .scroll-wrapper::-webkit-scrollbar {
-  display: none;                  /* Chrome/Safari */
+  display: none; /* Chrome/Safari */
 }
 
 .scroll-track {
   display: flex;
   gap: 2rem;
   width: max-content;
-  animation: scroll-left 40s linear infinite;
-  animation-play-state: running;
   scroll-snap-align: start;
   scroll-behavior: smooth;
-  will-change: transform;}
+  will-change: transform;
+}
+
 
 
 .scroll-item {
@@ -433,6 +434,12 @@ html {
     box-sizing: border-box;
   }
 }
+@media (min-width: 769px) {
+  .scroll-track {
+    animation: scroll-left 40s linear infinite;
+    animation-play-state: running;
+  }
+}
 
 </style>
 
@@ -578,35 +585,58 @@ html {
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const track = document.getElementById("scrollTrack");
-
     let isTouching = false;
     let touchTimeout;
+    let scrollAmount = 1;
+    let autoScroll;
 
     function pauseAutoScroll() {
-      track.style.animationPlayState = "paused";
+      if (window.innerWidth >= 768) {
+        track.style.animationPlayState = "paused";
+      } else {
+        clearInterval(autoScroll);
+      }
     }
 
     function resumeAutoScroll() {
-      track.style.animationPlayState = "running";
+      if (window.innerWidth >= 768) {
+        track.style.animationPlayState = "running";
+      } else {
+        startAutoScroll();
+      }
     }
 
-    // On user touch start – pause auto-scroll
+    function startAutoScroll() {
+      autoScroll = setInterval(() => {
+        track.scrollLeft += scrollAmount;
+        if (track.scrollLeft + track.clientWidth >= track.scrollWidth || track.scrollLeft <= 0) {
+          scrollAmount = -scrollAmount;
+        }
+      }, 30);
+    }
+
+    // Enable auto-scroll on mobile only
+    if (window.innerWidth < 768) {
+      startAutoScroll();
+    }
+
+    // Touch interactions on mobile
     track.addEventListener("touchstart", () => {
       isTouching = true;
       pauseAutoScroll();
       clearTimeout(touchTimeout);
     });
 
-    // On touch end – resume after 3 seconds
     track.addEventListener("touchend", () => {
       isTouching = false;
       touchTimeout = setTimeout(() => {
-        if (!isTouching) {
+        if (!isTouching && window.innerWidth < 768) {
           resumeAutoScroll();
         }
-      }, 3000);
+      }, 2000);
     });
   });
 </script>
+
 
 {% endblock %}
