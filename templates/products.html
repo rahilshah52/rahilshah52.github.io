@@ -62,63 +62,45 @@
     z-index: 99;
   }
 
-  @media (max-width: 768px) {
-  .card {
-    animation: fadeInUp 0.5s ease-in-out both;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
-
-
-
 @media (max-width: 768px) {
-  /* Turn off horizontal scroll */
-  .scroll-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px;
-    overflow-x: hidden !important;
+  #category-list {
+    display: none !important; /* hide sidebar category */
   }
 
-  /* 2-column stacked look */
+  .mobile-cat-btn.active {
+    background-color: #111;
+    color: #fff;
+    border-color: #111;
+  }
+
+  .scroll-container {
+    flex-wrap: wrap;
+    gap: 14px;
+    overflow-x: hidden;
+    justify-content: space-between;
+  }
+
   .scroll-container .card {
     flex: 0 0 48%;
-    margin-bottom: 10px;
+    background: white;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     padding: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   }
 
   .scroll-container .product-img {
     height: 160px;
     border-radius: 10px;
-    object-fit: cover;
     width: 100%;
+    object-fit: cover;
   }
 
-  .scroll-container .card-body {
-    padding: 0.4rem 0.2rem;
-    font-size: 0.8rem;
-    color: #555;
-    text-align: center;
-  }
-
-  /* Show all category sections in a single scroll */
   .category-images {
+    display: none !important;
+  }
+
+  .category-images.active {
     display: block !important;
-    opacity: 1 !important;
-    margin-bottom: 1.5rem;
   }
 
   .category-images h5 {
@@ -129,19 +111,27 @@
     color: #666;
   }
 
-  /* Hide category buttons on mobile if needed */
-  #category-list {
-    display: none !important;
+  /* CTA section spacing fix */
+  .section.text-center {
+    padding-top: 3rem !important;
   }
 }
 
 @media (max-width: 768px) {
-  body {
-    background-color: #fafafa;
+  .mobile-cat-btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    transition: all 0.3s;
   }
 
-  .card {
-    background: white;
+  #mobileCategoryScroll {
+    scrollbar-width: none; /* Firefox */
+  }
+
+  #mobileCategoryScroll::-webkit-scrollbar {
+    display: none; /* Chrome */
   }
 }
 
@@ -156,14 +146,17 @@
   </div>
 
   <div class="row">
-  <!-- CATEGORY BUTTONS -->
-  <div class="col-md-3 mb-4 order-2 order-md-1">
-    <div class="list-group" id="category-list">
-      {% for cat, data in product_images.items() %}
-      <button class="list-group-item list-group-item-action" data-category="{{ cat }}">{{ data.display_name }}</button>
-      {% endfor %}
-    </div>
+ <!-- MOBILE HORIZONTAL CATEGORY SCROLL (Only shown on mobile) -->
+<div class="d-md-none px-2 mb-3">
+  <div class="d-flex overflow-auto gap-2 pb-2" id="mobileCategoryScroll">
+    {% for cat, data in product_images.items() %}
+    <button class="btn btn-outline-dark btn-sm flex-shrink-0 mobile-cat-btn" data-category="{{ cat }}">
+      {{ data.display_name }}
+    </button>
+    {% endfor %}
   </div>
+</div>
+
 
   <!-- PRODUCT IMAGES -->
   <div class="col-md-9 order-1 order-md-2">
@@ -291,19 +284,24 @@
   });
 
 
-
-  // Disable category filtering on mobile to show all categories
+// MOBILE: tap to switch category view
 if (window.innerWidth <= 768) {
-  categorySections.forEach(section => {
-    section.style.display = "block";
-    section.classList.add("active");
+  const mobileButtons = document.querySelectorAll('.mobile-cat-btn');
+  mobileButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const selected = button.getAttribute('data-category');
+      document.querySelectorAll('.category-images').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.querySelector(`#${selected}-section`)?.classList.add('active');
+
+      mobileButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+    });
   });
 
-  // hide catalog button on mobile or make static
-  const catalogBtn = document.getElementById("catalogLink");
-  if (catalogBtn) {
-    catalogBtn.classList.add("d-none");
-  }
+  // Optionally show first category by default
+  mobileButtons[0]?.click();
 }
 
 </script>
