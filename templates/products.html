@@ -9,6 +9,13 @@
     height: 220px;
     object-fit: cover;
     cursor: pointer;
+    background: #f3f3f3;
+    filter: blur(8px);
+    transition: filter 0.4s;
+  }
+
+  .product-img.loaded {
+    filter: none;
   }
 
   .scroll-container {
@@ -98,7 +105,17 @@
     bottom: 40px;
     right: 30px;
     z-index: 99;
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+    opacity: 0.85;
   }
+#backToTop:hover {
+  opacity: 1;
+}
 .scroll-container::-webkit-scrollbar {
   display: none;
 }
@@ -287,8 +304,10 @@
           <div class="card" style="min-width: 220px;" data-aos="fade-up">
             <div class="card-body text-center small">{{ item.code }}</div>
             <img src="{{ url_for('static', filename='images/' + cat + '/' + item.filename) }}"
-              class="img-fluid product-img rounded" alt="{{ item.code }}"
-              loading="lazy" onclick="openModal(this.src, '{{ item.code }}')">
+                 class="img-fluid product-img rounded"
+                 alt="{{ item.code }}"
+                 loading="lazy"
+                 onclick="openModal(this.src, '{{ item.code }}')">
             <button class="quick-view-btn" onclick="openModal(this.previousElementSibling.src, '{{ item.code }}')">👁️</button>
           </div>
           {% endfor %}
@@ -328,6 +347,10 @@
     <a href="/contact" class="btn btn-light btn-lg">Get in Touch</a>
   </div>
 </div>
+
+<button id="backToTop" title="Back to Top" class="btn btn-dark rounded-circle shadow">
+  ↑
+</button>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
@@ -375,6 +398,30 @@
       }
     }, { passive: false });
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('.product-img').forEach(img => {
+    img.addEventListener('load', function() {
+      img.classList.add('loaded');
+    });
+    // If already loaded (from cache)
+    if (img.complete) img.classList.add('loaded');
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const btn = document.getElementById("backToTop");
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 300) {
+      btn.style.display = "flex";
+    } else {
+      btn.style.display = "none";
+    }
+  });
+  btn.onclick = function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+});
 </script>
 
 {% endblock %}
