@@ -9,13 +9,13 @@ app = Flask(__name__)
 categories = ['bedroom', 'living', 'dining', 'modular', 'lighting', 'sanitaryware', 'premium']
 # Put this near the top or in a global config section
 homepage_display = {
-    'bedroom': 'images/bedroom/bed 15.jpeg',
-    'living': 'images/living/living_room 19.jpeg',
-    'dining': 'images/dining/tables_catalog_18_1.jpeg',
-    'modular': 'images/modular/plywood_cabinet 17.png',
-    'lighting': 'images/lighting/lighting 1.jpeg',
-    'sanitaryware': 'images/sanitaryware/washbasin_faucets 78.jpeg',
-    'premium': 'images/premium/baxter_2_128_5.jpeg'
+    'bedroom': 'images/bedroom/bed 15.webp',
+    'living': 'images/living/living_room 19.webp',
+    'dining': 'images/dining/tables_catalog_18_1.webp',
+    'modular': 'images/modular/plywood_cabinet 17.webp',
+    'lighting': 'images/lighting/lighting 1.webp',
+    'sanitaryware': 'images/sanitaryware/washbasin_faucets 78.webp',
+    'premium': 'images/premium/baxter_2_128_5.webp'
 }
 homepage_display_names = {
     'bedroom': 'Bedroom & Bed',
