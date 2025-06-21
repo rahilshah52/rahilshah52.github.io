@@ -536,7 +536,15 @@ html {
     </div>
     <div class="col-md-6 mt-4 mt-md-0">
       <div class="img-ratio-box">
-        <img src="{{ url_for('static', filename='images/about.webp') }}" class="img-fluid rounded shadow product-img" alt="About Us">
+        <img 
+          src="{{ url_for('static', filename='images/about.webp') }}"
+          srcset="
+            {{ url_for('static', filename='images/about.webp') }} 400w,
+            {{ url_for('static', filename='images/about.webp') }} 800w
+          "
+          sizes="(max-width: 600px) 400px, 800px"
+          class="img-fluid rounded shadow product-img"
+          alt="About Us">
       </div>
     </div>
   </div>
@@ -564,7 +572,15 @@ html {
     {% for cat, img in homepage_display.items() %}
       <div class="scroll-item">
         <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
-          <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}" loading="lazy">
+          <img 
+            src="{{ url_for('static', filename=img) }}"
+            srcset="
+              {{ url_for('static', filename=img) }} 400w,
+              {{ url_for('static', filename=img) }} 800w
+            "
+            sizes="(max-width: 600px) 400px, 800px"
+            alt="{{ cat }}"
+            loading="lazy">
           <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
         </a>
       </div>
@@ -573,7 +589,15 @@ html {
     {% for cat, img in homepage_display.items() %}
       <div class="scroll-item">
         <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
-          <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}" loading="lazy">
+          <img 
+            src="{{ url_for('static', filename=img) }}"
+            srcset="
+              {{ url_for('static', filename=img) }} 400w,
+              {{ url_for('static', filename=img) }} 800w
+            "
+            sizes="(max-width: 600px) 400px, 800px"
+            alt="{{ cat }}"
+            loading="lazy">
           <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
         </a>
       </div>
@@ -603,7 +627,14 @@ html {
       <div class="col-6 col-md-3">
         <a href="/services" style="text-decoration: none; color: inherit;">
           <div class="card border-0 shadow-sm h-100 p-2 rounded-4">
-            <img src="{{ url_for('static', filename='images/services/' + img) }}" class="img-fluid rounded-3 mb-2" alt="{{ label }}">
+            <img src="{{ url_for('static', filename='images/services/' + img) }}"
+            srcset="
+              {{ url_for('static', filename='images/services/' + img) }} 100w,
+              {{ url_for('static', filename='images/services/' + img) }} 200w
+            "
+            sizes="(max-width: 600px) 100px, 200px"
+            class="img-fluid rounded-3 mb-2"
+            alt="{{ label }}">
             <p class="fw-semibold mb-0">{{ label }}</p>
           </div>
         </a>
