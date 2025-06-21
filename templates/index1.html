@@ -123,6 +123,8 @@
   touch-action: pan-x;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
 }
 
 .scroll-wrapper::-webkit-scrollbar {
@@ -133,9 +135,12 @@
   display: flex;
   gap: 2rem;
   width: max-content;
+  min-width: 100vw; /* Prevents initial iOS bounce */
   scroll-snap-align: start;
   scroll-behavior: smooth;
   will-change: transform;
+  animation: scroll-left 40s linear infinite;
+  animation-play-state: running;
 }
 
 
@@ -467,8 +472,6 @@ html {
   animation-play-state: running;
 }
 
-</style>
-
 <!-- Hero -->
 <div class="hero" data-aos="fade-in">
   <div class="hero-content">
@@ -609,6 +612,22 @@ html {
     // Ensure scroll is animated on load
     track.style.animationPlayState = "running";
   });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const wrapper = document.querySelector('.scroll-wrapper');
+  wrapper.style.visibility = 'hidden';
+  const imgs = wrapper.querySelectorAll('img');
+  let loaded = 0;
+  imgs.forEach(img => {
+    if (img.complete) loaded++;
+    else img.addEventListener('load', () => {
+      loaded++;
+      if (loaded === imgs.length) wrapper.style.visibility = 'visible';
+    });
+  });
+  if (loaded === imgs.length) wrapper.style.visibility = 'visible';
+});
 </script>
 
 
