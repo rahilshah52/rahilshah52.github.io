@@ -106,6 +106,13 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.category-images {
+  display: none;
+}
+.category-images.active {
+  display: block;
+}
+
   /* Mobile view */
   @media (max-width: 768px) {
   .container {
@@ -178,15 +185,6 @@
     font-size: 0.9rem;
     color: #444;
   }
-
-  .category-images {
-    display: none !important;
-  }
-
-  .category-images.active {
-    display: block !important;
-  }
-
   .category-images h5 {
     padding-left: 0;
     font-weight: 500;
@@ -282,7 +280,7 @@
     <!-- Product Display Area -->
     <div class="col-md-9 order-1 order-md-2">
       {% for cat, data in product_images.items() %}
-      <div class="category-images" id="{{ cat }}-section" style="display: none;">
+      <div class="category-images{% if loop.first %} active{% endif %}" id="{{ cat }}-section">
         <h5 class="text-muted text-start mt-4 mb-2">{{ data.display_name }}</h5>
         <div class="scroll-container">
           {% for item in data["items"] %}
@@ -347,9 +345,9 @@
   categoryButtons.forEach(button => {
     button.addEventListener('click', () => {
       const selected = button.getAttribute('data-category');
-      categorySections.forEach(section => section.style.display = 'none');
+      categorySections.forEach(section => section.classList.remove('active'));
       const section = document.getElementById(selected + '-section');
-      if (section) section.style.display = 'block';
+      if (section) section.classList.add('active');
 
       localStorage.setItem('activeCategory', selected);
       document.getElementById('catalogLink').innerText = `View Full ${selected.charAt(0).toUpperCase() + selected.slice(1)} Catalog →`;

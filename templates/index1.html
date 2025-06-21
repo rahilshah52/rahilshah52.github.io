@@ -519,25 +519,24 @@ html {
 
   <div class="scroll-wrapper">
     <div class="scroll-track" id="scrollTrack">
-  {% for cat, img in homepage_display.items() %}
-    <div class="scroll-item">
-      <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
-        <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
-        <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
-      </a>
-    </div>
-  {% endfor %}
-
-  <!-- Repeat for seamless scroll -->
-  {% for cat, img in homepage_display.items() %}
-    <div class="scroll-item">
-      <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
-        <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}">
-        <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
-      </a>
-    </div>
-  {% endfor %}
-</div>
+    {% for cat, img in homepage_display.items() %}
+      <div class="scroll-item">
+        <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
+          <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}" loading="lazy">
+          <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
+        </a>
+      </div>
+    {% endfor %}
+    <!-- Repeat for seamless scroll -->
+    {% for cat, img in homepage_display.items() %}
+      <div class="scroll-item">
+        <a href="/products?category={{ cat }}" style="text-decoration: none; color: black;">
+          <img src="{{ url_for('static', filename=img) }}" alt="{{ cat }}" loading="lazy">
+          <p class="mt-2 fw-semibold">{{ homepage_display_names[cat] }}</p>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
   </div>
 
   <div class="text-center mt-4">
@@ -617,17 +616,6 @@ html {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const wrapper = document.querySelector('.scroll-wrapper');
-  wrapper.style.visibility = 'hidden';
-  const imgs = wrapper.querySelectorAll('img');
-  let loaded = 0;
-  imgs.forEach(img => {
-    if (img.complete) loaded++;
-    else img.addEventListener('load', () => {
-      loaded++;
-      if (loaded === imgs.length) wrapper.style.visibility = 'visible';
-    });
-  });
-  if (loaded === imgs.length) wrapper.style.visibility = 'visible';
 });
 </script>
 
