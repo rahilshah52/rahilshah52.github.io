@@ -17,6 +17,28 @@ img {
   -webkit-user-drag: none;
   user-select: none;
 }
+.img-ratio-box,
+.hero,
+.product-img,
+img {
+  touch-action: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+/* Prevent vertical scroll (touch move) on hero and about images */
+.hero img,
+.img-ratio-box img {
+  touch-action: none !important;
+  pointer-events: none !important;
+}
+
+/* Allow click/tap on service images, but prevent drag/select */
+.section.bg-light .row.g-4 img {
+  touch-action: manipulation;
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: auto !important;
+}
 </style>
 
 <!-- Hero -->
