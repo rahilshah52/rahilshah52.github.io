@@ -46,7 +46,7 @@ mail = Mail(app)
 
 @app.route('/')
 def home():
-    return render_template('index.html', homepage_display=homepage_display, homepage_display_names=homepage_display_names)
+    return render_template('index1.html', homepage_display=homepage_display, homepage_display_names=homepage_display_names)
 
 @app.route('/catalogs')
 def catalogs():
