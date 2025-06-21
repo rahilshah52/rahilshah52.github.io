@@ -224,8 +224,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (wrapper) wrapper.scrollLeft = 0;
   };
 </script>
-
-
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  setTimeout(function() {
+    // Only run on mobile
+    if (window.innerWidth <= 600) {
+      window.scrollTo(0, 0);
+      const wrapper = document.querySelector('.scroll-wrapper');
+      if (wrapper) wrapper.scrollLeft = 0;
+    }
+  }, 50); // Delay to override browser's restore
+});
+</script>
 
 {% endblock %}
 
