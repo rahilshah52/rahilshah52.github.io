@@ -240,16 +240,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  var loader = document.getElementById('customLoader');
-  loader.style.width = "100vw";
+var loader = document.getElementById('customLoader');
+loader.style.width = "100vw";
+var minTime = 800; // ms
+var start = Date.now();
+window.onload = function() {
+  var elapsed = Date.now() - start;
+  var wait = Math.max(0, minTime - elapsed);
   setTimeout(function() {
     loader.style.opacity = 0;
     setTimeout(function() {
       loader.style.display = 'none';
     }, 400);
-  }, 1200); // 1.2 seconds
-});
+  }, wait);
+};
 </script>
 
 
