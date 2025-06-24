@@ -76,6 +76,11 @@
 
   .category-images {
     transition: opacity 0.3s ease-in-out;
+    display: block;
+    width: 100%;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   .category-images h5 {
@@ -159,13 +164,24 @@
   /* --- REFINED MOBILE PRODUCT GRID STYLES (within @media max-width: 768px) --- */
   .scroll-container {
     display: grid;
-    /* Create a responsive grid: 2 columns for most mobile, 1 column if very narrow */
-    /* Adjust minmax(160px, 1fr) if you want larger/smaller cards */
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* Always 2 cards per row */
     gap: 1.25rem; /* Slightly larger gap between cards for more breathing room */
-    overflow-x: hidden; /* Ensure no horizontal scrolling within the grid itself */
-    padding: 0 0.5rem; /* Small horizontal padding to prevent cards touching edges */
+    /* Remove overflow-x: hidden and overflow-y: unset to allow vertical scroll */
+    padding: 0 0.5rem;
     margin: 0;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+    border-radius: 18px;
+    touch-action: auto !important;
+    pointer-events: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .scroll-container .card,
+  .scroll-container .product-img {
+    touch-action: auto !important;
+    pointer-events: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
   .scroll-container .card {
@@ -254,12 +270,47 @@
     background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
     border-radius: 18px;
   }
+
+  .about-img-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+
+  .scroll-container,
+  .scroll-container .card,
+  .scroll-container .product-img {
+    touch-action: auto !important;
+    pointer-events: auto !important;
+  }
 }
 
 .modal-header {
   background: rgba(30,30,30,0.85);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   min-height: 56px;
+}
+
+@media (max-width: 900px) {
+  .product-carousel {
+    display: grid !important;
+    grid-template-columns: 1fr; /* One card per row */
+    gap: 1rem;
+    overflow-x: unset !important;
+    overflow-y: unset !important;
+    scroll-snap-type: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    -webkit-overflow-scrolling: auto !important;
+    touch-action: pan-y !important;
+  }
+  .product-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 1rem 0 !important;
+  }
 }
 
 </style>
@@ -359,6 +410,7 @@
   ↑
 </button>
 
+
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
   AOS.init();
@@ -398,13 +450,13 @@
 
   // Enable horizontal scroll with mouse wheel
   document.querySelectorAll('.scroll-container').forEach(container => {
-    container.addEventListener('wheel', function (e) {
-      if (e.deltaY !== 0) {
-        e.preventDefault();
-        container.scrollLeft += e.deltaY;
-      }
-    }, { passive: false });
-  });
+  container.addEventListener('wheel', function (e) {
+    if (e.deltaY !== 0) {
+      e.preventDefault();
+      container.scrollLeft += e.deltaY;
+    }
+  }, { passive: false });
+});
 
   document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll('.product-img').forEach(img => {
