@@ -161,55 +161,68 @@
     display: none;
   }
 
-  /* --- REFINED MOBILE PRODUCT GRID STYLES (within @media max-width: 768px) --- */
+  /* --- CLEAN MOBILE PRODUCT GRID STYLES (from scratch) --- */
   .scroll-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Always 2 cards per row */
-    gap: 1.25rem; /* Slightly larger gap between cards for more breathing room */
-    padding: 0 0.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 0;
     margin: 0;
-    box-sizing: border-box;
-    background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
-    border-radius: 18px;
+    background: none;
+    border-radius: 0;
     overflow: visible !important;
-    touch-action: auto !important;
-    pointer-events: auto !important;
-    -webkit-overflow-scrolling: auto !important;
+    box-sizing: border-box;
   }
-
-  .scroll-container .card,
-  .scroll-container .product-img {
-    touch-action: auto !important;
-    pointer-events: auto !important;
-  }
-
   .scroll-container .card {
-    /* Use the general .card styles, but override specific mobile needs */
-    width: auto; /* Let grid handle width */
-    min-width: unset; /* Remove explicit min-width from desktop (if any) */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Lighter shadow for mobile grid */
-    border: none; /* Inherit from general .card */
-    border-radius: 8px; /* Slightly less rounded than desktop, but still soft */
-    transform: none; /* Remove transform on mobile as no hover */
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    background: #fff;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+    position: relative;
+    transform: none;
   }
-
-  .scroll-container .card:hover {
-      transform: none; /* Disable hover effect on mobile */
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Keep same light shadow on hover */
-  }
-
   .scroll-container .product-img {
-    height: 160px; /* Adjusted height for mobile grid cards */
-    border-radius: 8px 8px 0 0; /* Match card top corners */
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+    background: #f3f3f3;
+    transition: filter 0.4s;
   }
-
   .card-body {
-    padding: 0.75rem 0.5rem; /* Slightly reduced padding for mobile cards */
-    font-size: 0.85rem; /* Smaller font for product code */
-    font-weight: 600; /* Make product code a bit bolder */
-    color: #444; /* Consistent text color */
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #333;
+    font-weight: 500;
   }
-  /* --- END REFINED MOBILE PRODUCT GRID STYLES --- */
+  .quick-view-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    font-size: 1.1em;
+    opacity: 0.92;
+    z-index: 3;
+  }
+  html, body {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  /* --- END CLEAN MOBILE PRODUCT GRID STYLES --- */
 
   .card-body {
     padding: 6px 4px;
