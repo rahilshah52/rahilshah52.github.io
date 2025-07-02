@@ -1,404 +1,123 @@
 {% extends "base.html" %}
 {% block content %}
-
 <!-- AOS CSS -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 <style>
+  /* --- Premium Product Grid Styles --- */
+  .product-section { margin-top: 2.5rem; }
+  .sticky-top { top: 90px; }
+  .category-btn.active, .mobile-cat-btn.active { background: #111; color: #fff; border-color: #111; }
+  .category-btn, .mobile-cat-btn { transition: all 0.2s; }
+  .product-card { border: none; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.10); transition: box-shadow 0.3s, transform 0.3s; }
+  .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.16); transform: translateY(-8px) scale(1.025); }
   .product-img {
-    height: 220px;
-    object-fit: cover;
-    cursor: pointer;
-    background: #f3f3f3;
-    filter: blur(8px);
-    transition: filter 0.4s;
-  }
-
-  .product-img.loaded {
-    filter: none;
-  }
-
-  .scroll-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  .scroll-container::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .scroll-container::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-  }
-
-  .scroll-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  /* General card styling for both desktop and mobile */
-.card {
-  border: none; /* Remove default Bootstrap border */
-  border-radius: 12px; /* Slightly more rounded corners for premium feel */
-  overflow: hidden; /* Ensures image corners match card corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Subtle, elegant shadow */
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transitions for hover */
-}
-
-.card:hover {
-  transform: translateY(-5px); /* Lift card slightly on hover */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* More pronounced shadow on hover */
-}
-
-.product-img {
-  height: 220px; /* Desktop height */
-  object-fit: cover;
-  cursor: pointer;
-  width: 100%; /* Ensure image fills card width */
-  border-radius: 12px 12px 0 0; /* Match top card corners */
-  transition: transform 0.3s ease-in-out; /* Existing transition */
-}
-
-/* On hover, scale image slightly inside the card */
-.card:hover .product-img {
-  transform: scale(1.05);
-}
-
-/* Card body for product code */
-.card-body {
-  padding: 1rem; /* More generous padding */
-  font-size: 0.95rem; /* Slightly larger text */
-  color: #333; /* Darker, more prominent text */
-  font-weight: 500;
-}
-
-  .category-images {
-    transition: opacity 0.3s ease-in-out;
-    display: block;
     width: 100%;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-
-  .category-images h5 {
-    font-weight: 600;
-    font-size: 1rem;
-    margin-bottom: 0.6rem;
-    padding-left: 8px;
-    color: #666;
-  }
-
-  .mobile-cat-btn.active {
-    background-color: #111;
-    color: #fff;
-    border-color: #111;
-  }
-
-  .modal-img {
-    width: 90vw;
-    height: auto;
-    max-height: 90vh;
+    aspect-ratio: 1/1;
+    max-height: 270px;
+    min-height: 190px;
     object-fit: contain;
-  }
-
-  #backToTop {
-    display: none;
-    position: fixed;
-    bottom: 40px;
-    right: 30px;
-    z-index: 99;
-    width: 44px;
-    height: 44px;
-    font-size: 1.5rem;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.3s;
-    opacity: 0.85;
-  }
-#backToTop:hover {
-  opacity: 1;
-}
-.scroll-container::-webkit-scrollbar {
-  display: none;
-}
-.scroll-container {
-  scrollbar-width: none; /* Firefox */
-}
-
-.category-images {
-  display: none;
-}
-.category-images.active {
-  display: block;
-}
-
-  /* Mobile view */
-  @media (max-width: 768px) {
-  .container {
-    padding: 0 8px;
-  }
-
-  #category-list {
-    display: none !important;
-  }
-
-  .mobile-cat-btn {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-    transition: all 0.3s;
-  }
-
-  #mobileCategoryScroll {
-    scrollbar-width: none;
-  }
-
-  #mobileCategoryScroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* --- CLEAN MOBILE PRODUCT GRID STYLES (from scratch) --- */
-  .scroll-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding: 0;
-    margin: 0;
-    background: none;
-    border-radius: 0;
-    overflow: visible !important;
-    box-sizing: border-box;
-  }
-  .scroll-container .card {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    background: #fff;
-    margin: 0;
-    border: none;
-    overflow: hidden;
-    position: relative;
-    transform: none;
-  }
-  .scroll-container .product-img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 10px 10px 0 0;
+    border-radius: 14px 14px 0 0;
     background: #f3f3f3;
-    transition: filter 0.4s;
+    border: 1.5px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    filter: none !important;
+    transition: box-shadow 0.3s;
+    display: block;
+    margin: 0 auto;
   }
-  .card-body {
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    text-align: center;
-    color: #333;
-    font-weight: 500;
-  }
-  .quick-view-btn {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    background: #111;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    font-size: 1.1em;
-    opacity: 0.92;
-    z-index: 3;
-  }
-  html, body {
-    overflow-x: hidden !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-  }
-  /* --- END CLEAN MOBILE PRODUCT GRID STYLES --- */
-
-  .card-body {
-    padding: 6px 4px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #444;
-  }
-  .category-images h5 {
-    padding-left: 0;
-    font-weight: 500;
-    font-size: 0.95rem;
-    margin-top: 1rem;
-    margin-bottom: 0.4rem;
-    text-align: center;
-  }
-
-  .scroll-container .card[data-aos] {
-    opacity: 0;
-    transform: scale(0.96) translateY(24px);
-    transition: opacity 0.5s, transform 0.5s;
-  }
-  .scroll-container .card[data-aos].aos-animate {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-
+  .product-card { background: #fff; border: 1px solid #eee; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.10); transition: box-shadow 0.3s, transform 0.3s; padding-bottom: 1rem; }
+  .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.16); transform: translateY(-8px) scale(1.025); }
+  .wishlist-btn { position: absolute; top: 0; right: 0; margin: 0.5rem; z-index: 2; }
+  .badge { font-size: 0.8em; }
+  .skeleton-loader { background: linear-gradient(90deg, #f3f3f3 25%, #ececec 50%, #f3f3f3 75%); background-size: 200% 100%; animation: skeleton 1.2s infinite linear; }
+  @keyframes skeleton { 0% {background-position: 200% 0;} 100% {background-position: -200% 0;} }
+  .fade-in { opacity: 0; transform: translateY(24px) scale(0.96); transition: opacity 0.5s, transform 0.5s; }
+  .fade-in.aos-animate { opacity: 1; transform: none; }
+  .quick-view-btn { position: absolute; bottom: 10px; right: 10px; background: #111; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; opacity: 0.92; z-index: 3; }
+  #backToTop { display: none; position: fixed; bottom: 40px; right: 30px; z-index: 99; width: 44px; height: 44px; font-size: 1.5rem; align-items: center; justify-content: center; opacity: 0.85; }
+  #backToTop:hover { opacity: 1; }
+  .floating-contact { position: fixed; bottom: 100px; right: 30px; z-index: 99; width: 44px; height: 44px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; }
+  @media (max-width: 991px) { .sticky-top { position: static !important; } }
   @media (max-width: 768px) {
-  .quick-view-btn {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-    background: #111;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    font-size: 1.2em;
-    opacity: 0.92;
-    z-index: 3;
+    .desktop-categories { display: none !important; }
+    .mobile-cat-btn { font-size: 0.95em; padding: 6px 14px; border-radius: 20px; white-space: nowrap; }
+    .product-img { height: 120px; }
+    .product-card { border-radius: 10px; }
+    .product-grid { grid-template-columns: 1fr 1fr !important; gap: 1rem !important; }
   }
-  .card {
-    position: relative;
-  }
-
-  .scroll-container .card {
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(200,200,200,0.18);
-  }
-
-  .scroll-container {
-    background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
-    border-radius: 18px;
-  }
-
-  .about-img-col {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1.5rem;
-  }
-
-  .scroll-container,
-  .scroll-container .card,
-  .scroll-container .product-img {
-    touch-action: auto !important;
-    pointer-events: auto !important;
-  }
-}
-
-.modal-header {
-  background: rgba(30,30,30,0.85);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  min-height: 56px;
-}
-
-@media (max-width: 900px) {
-  .product-carousel {
-    display: grid !important;
-    grid-template-columns: 1fr; /* One card per row */
-    gap: 1rem;
-    overflow-x: unset !important;
-    overflow-y: unset !important;
-    scroll-snap-type: none !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    width: 100% !important;
-    -webkit-overflow-scrolling: auto !important;
-    touch-action: pan-y !important;
-  }
-  .product-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 0 1rem 0 !important;
-  }
-}
-
-/* Prevent horizontal scroll on the entire page for mobile */
-  html, body {
-  overflow-x: hidden !important;
-  width: 100vw !important;
-  max-width: 100vw !important;
-}
+  .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
 </style>
-
-<div class="container mt-5">
-  <div class="text-center mb-4">
-    <h2 class="fw-semibold">Explore by Category</h2>
-    <p class="text-muted">Browse our curated collections by room or style</p>
-  </div>
-
-  <div class="row">
-    <!-- Sidebar Category Buttons (Desktop) -->
-    <div class="col-md-3 mb-4 d-none d-md-block" id="category-list">
-      <div class="list-group">
+<div class="container-fluid product-section" style="max-width:1440px;">
+  <div class="row justify-content-center">
+    <!-- Sidebar (Desktop) -->
+    <aside class="col-lg-3 col-md-4 d-none d-md-block pe-lg-4 desktop-categories" style="min-width:240px; max-width:320px;">
+      <div class="sticky-top">
+        <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+          <h5 class="fw-semibold mb-3">Categories</h5>
+          <div class="list-group list-group-flush">
+            {% for cat, data in product_images.items() %}
+            <button class="list-group-item list-group-item-action py-3 px-2 mb-2 rounded-3 category-btn" data-category="{{ cat }}">{{ data.display_name }}</button>
+            {% endfor %}
+            <button class="list-group-item list-group-item-action py-3 px-2 mb-2 rounded-3 category-btn" data-category="wishlist">❤️ My Wishlist</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <!-- Mobile Category Chips -->
+    <div class="d-lg-none mb-3">
+      <div class="d-flex gap-2 overflow-auto pb-2" id="mobileCategoryScroll">
         {% for cat, data in product_images.items() %}
-        <button class="list-group-item list-group-item-action" data-category="{{ cat }}">
-          {{ data.display_name }}
-        </button>
+        <button class="btn btn-outline-dark btn-sm flex-shrink-0 rounded-pill mobile-cat-btn" data-category="{{ cat }}">{{ data.display_name }}</button>
         {% endfor %}
+        <button class="btn btn-outline-danger btn-sm flex-shrink-0 rounded-pill mobile-cat-btn" data-category="wishlist">❤️ My Wishlist</button>
       </div>
     </div>
-
-    <!-- Horizontal Scroll Category Buttons (Mobile) -->
-    <div class="d-md-none px-2 mb-3">
-      <div class="d-flex overflow-auto gap-2 pb-2" id="mobileCategoryScroll">
-        {% for cat, data in product_images.items() %}
-        <button class="btn btn-outline-dark btn-sm flex-shrink-0 mobile-cat-btn" data-category="{{ cat }}">
-          {{ data.display_name }}
-        </button>
-        {% endfor %}
+    <!-- Main Product Grid -->
+    <main class="col-lg-9 col-md-8">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-semibold mb-0">Products</h2>
+        <button class="btn btn-outline-secondary d-lg-none" onclick="alert('Filter coming soon!')">Filter</button>
       </div>
-    </div>
-
-    <!-- Place after #mobileCategoryScroll -->
-    <div class="d-md-none mb-3 text-end">
-      <button class="btn btn-light border rounded-pill px-3 py-1 shadow-sm" onclick="alert('Sort/filter coming soon!')">
-        <span style="font-size:1.1em;">🔍</span> Filter / Sort
-      </button>
-    </div>
-
-    <!-- Product Display Area -->
-    <div class="col-md-9 order-1 order-md-2">
       {% for cat, data in product_images.items() %}
-      <div class="category-images{% if loop.first %} active{% endif %}" id="{{ cat }}-section">
-        <h5 class="text-muted text-start mt-4 mb-2">{{ data.display_name }}</h5>
-        <div class="scroll-container">
+      <div class="category-group w-100{% if not loop.first %} d-none{% endif %}" id="{{ cat }}-section">
+        {% if data['items']|length == 0 %}
+          <div class="text-center text-muted py-5">No products found for this category.<br>Debug: cat={{cat}}, items={{data['items']}}</div>
+        {% endif %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-4">
           {% for item in data["items"] %}
-          <div class="card" style="min-width: 220px;" data-aos="fade-up">
-            <div class="card-body text-center small">{{ item.code }}</div>
-            <img src="{{ url_for('static', filename='images/' + cat + '/' + item.filename) }}"
-                 class="img-fluid product-img rounded"
-                 alt="{{ item.code }}"
-                 loading="lazy"
-                 onclick="openModal(this.src, '{{ item.code }}')">
-            <button class="quick-view-btn" onclick="openModal(this.previousElementSibling.src, '{{ item.code }}')">👁️</button>
+          <div class="col">
+            <div class="card h-100 shadow-sm border-0 rounded-4 d-flex flex-column justify-content-between">
+              <div class="bg-light d-flex align-items-center justify-content-center rounded-4 position-relative" style="aspect-ratio:1/1; min-height:160px; max-height:220px; overflow:hidden;">
+                <img src="{{ url_for('static', filename='images/' + cat + '/' + item.filename) }}" class="product-img" alt="{{ item.code }}" loading="lazy" style="max-width:95%; max-height:95%; object-fit:contain; background:#f3f3f3; border-radius:14px; cursor:pointer;" onclick="openModal(this.src, '{{ item.code }}')">
+                <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 wishlist-btn" aria-label="Add to wishlist" data-code="{{ item.code }}"><span class="fs-5 wishlist-heart">&#9825;</span></button>
+              </div>
+              <div class="card-body text-center py-3">
+                <div class="fw-semibold small mb-1">{{ item.code }}</div>
+              </div>
+            </div>
           </div>
           {% endfor %}
         </div>
       </div>
       {% endfor %}
-    </div>
-
-    <div class="col-12 order-3 mt-4 text-center">
-      <a id="catalogLink" href="/catalogs?cat=lighting" class="btn btn-outline-dark">
-        View Full Lighting Catalog →
-      </a>
+      <!-- Wishlist Category Section -->
+      <div class="category-group w-100 d-none" id="wishlist-section">
+        <h4 class="fw-semibold mb-3">My Wishlist</h4>
+        <div id="wishlistProducts" class="row g-4"></div>
+        <div id="wishlistEmpty" class="text-center text-muted py-5">No products in your wishlist yet.</div>
+      </div>
+      <!-- Load More button removed: infinite scroll is enabled -->
+    </main>
+  </div>
+  <button id="backToTop" title="Back to Top" class="btn btn-dark rounded-circle shadow position-fixed" style="bottom: 40px; right: 30px; z-index: 99; width: 44px; height: 44px; font-size: 1.5rem; display: none;">↑</button>
+  <!-- Wishlist Notification Toast -->
+  <div id="wishlistToast" class="toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-4" role="alert" aria-live="assertive" aria-atomic="true" style="z-index:9999; min-width:220px; display:none;">
+    <div class="d-flex">
+      <div class="toast-body" id="wishlistToastMsg">Added to wishlist!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="document.getElementById('wishlistToast').style.display='none';" aria-label="Close"></button>
     </div>
   </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1">
   <div class="modal-dialog modal-fullscreen">
@@ -406,15 +125,14 @@
       <div class="modal-header border-0 justify-content-between align-items-center">
         <button type="button" class="btn-close btn-close-white me-3" data-bs-dismiss="modal" aria-label="Close"></button>
         <h5 class="modal-title text-white flex-grow-1 text-center m-0" id="imageModalLabel"></h5>
-        <div style="width:40px"></div> <!-- Spacer to balance the close button -->
+        <div style="width:40px"></div>
       </div>
       <div class="modal-body d-flex justify-content-center align-items-center">
-        <img id="modalImage" class="modal-img" src="" alt="Product Image">
+        <img id="modalImage" class="modal-img" src="" alt="Product Image" style="max-width:90vw; max-height:80vh; width:auto; height:auto; display:block; margin:auto; object-fit:contain; background:#222; border-radius:18px; box-shadow:0 4px 32px rgba(0,0,0,0.25);">
       </div>
     </div>
   </div>
 </div>
-
 <!-- CTA -->
 <div class="section text-center bg-dark text-white mt-5 py-5">
   <div class="container" data-aos="fade-up">
@@ -423,72 +141,140 @@
     <a href="/contact" class="btn btn-light btn-lg">Get in Touch</a>
   </div>
 </div>
-
-<button id="backToTop" title="Back to Top" class="btn btn-dark rounded-circle shadow">
-  ↑
-</button>
-
-
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-  AOS.init();
-
-  function openModal(src, title) {
-    document.getElementById('modalImage').src = src;
-    document.getElementById('imageModalLabel').textContent = title;
-    new bootstrap.Modal(document.getElementById('imageModal')).show();
-  }
-
-  const categoryButtons = document.querySelectorAll('[data-category]');
-  const categorySections = document.querySelectorAll('.category-images');
-
-  categoryButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const selected = button.getAttribute('data-category');
-      categorySections.forEach(section => section.classList.remove('active'));
-      const section = document.getElementById(selected + '-section');
-      if (section) section.classList.add('active');
-
-      localStorage.setItem('activeCategory', selected);
-      document.getElementById('catalogLink').innerText = `View Full ${selected.charAt(0).toUpperCase() + selected.slice(1)} Catalog →`;
-      document.getElementById('catalogLink').href = `/catalogs?cat=${selected}`;
-
-      categoryButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-    });
-  });
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productImages = {{ product_images|tojson|safe }};
-    const category = urlParams.get('category') || localStorage.getItem('activeCategory') || Object.keys(productImages).at(0);
-    const btn = document.querySelector(`[data-category="${category}"]`);
-    if (btn) btn.click();
-  });
-
-  document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll('.product-img').forEach(img => {
-    img.addEventListener('load', function() {
-      img.classList.add('loaded');
-    });
-    // If already loaded (from cache)
-    if (img.complete) img.classList.add('loaded');
+AOS.init();
+function openModal(src, title) {
+  document.getElementById('modalImage').src = src;
+  document.getElementById('imageModalLabel').textContent = title;
+  new bootstrap.Modal(document.getElementById('imageModal')).show();
+}
+// Category switching for new markup
+const categoryButtons = document.querySelectorAll('[data-category]');
+const categoryGroups = document.querySelectorAll('.category-group');
+categoryButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const selected = button.getAttribute('data-category');
+    categoryGroups.forEach(section => section.classList.add('d-none'));
+    const section = document.getElementById(selected + '-section');
+    if (section) section.classList.remove('d-none');
+    localStorage.setItem('activeCategory', selected);
+    categoryButtons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
   });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  const btn = document.getElementById("backToTop");
-  window.addEventListener("scroll", function () {
-    if (window.scrollY > 300) {
-      btn.style.display = "flex";
+
+// Wishlist logic
+function showWishlistToast(msg) {
+  const toast = document.getElementById('wishlistToast');
+  document.getElementById('wishlistToastMsg').textContent = msg;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 1800);
+}
+
+function updateWishlistUI() {
+  const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  document.querySelectorAll('.wishlist-btn').forEach(btn => {
+    const code = btn.getAttribute('data-code');
+    const heart = btn.querySelector('.wishlist-heart');
+    if (wishlist.includes(code)) {
+      heart.innerHTML = '&#9829;'; // filled heart
+      heart.style.color = '#e63946';
+      btn.classList.add('active');
     } else {
-      btn.style.display = "none";
+      heart.innerHTML = '&#9825;'; // outline heart
+      heart.style.color = '';
+      btn.classList.remove('active');
     }
   });
-  btn.onclick = function () {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // Render wishlist category
+  renderWishlistProducts();
+}
+
+function renderWishlistProducts() {
+  const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  const productImages = window.productImagesData || {};
+  const wishlistProducts = [];
+  Object.entries(productImages).forEach(([cat, data]) => {
+    (data.items || []).forEach(item => {
+      if (wishlist.includes(item.code)) {
+        wishlistProducts.push({ ...item, cat });
+      }
+    });
+  });
+  const container = document.getElementById('wishlistProducts');
+  const emptyMsg = document.getElementById('wishlistEmpty');
+  if (!container || !emptyMsg) return;
+  container.innerHTML = '';
+  if (wishlistProducts.length === 0) {
+    emptyMsg.style.display = '';
+    return;
+  }
+  emptyMsg.style.display = 'none';
+  wishlistProducts.forEach(item => {
+    const col = document.createElement('div');
+    col.className = 'col';
+    col.innerHTML = `
+      <div class="card h-100 shadow-sm border-0 rounded-4 d-flex flex-column justify-content-between">
+        <div class="bg-light d-flex align-items-center justify-content-center rounded-4 position-relative" style="aspect-ratio:1/1; min-height:160px; max-height:220px; overflow:hidden;">
+          <img src="/static/images/${item.cat}/${item.filename}" class="product-img" alt="${item.code}" loading="lazy" style="max-width:95%; max-height:95%; object-fit:contain; background:#f3f3f3; border-radius:14px; cursor:pointer;" onclick="openModal(this.src, '${item.code}')">
+          <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 wishlist-btn" aria-label="Add to wishlist" data-code="${item.code}"><span class="fs-5 wishlist-heart">&#9829;</span></button>
+        </div>
+        <div class="card-body text-center py-3">
+          <div class="fw-semibold small mb-1">${item.code}</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(col);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Wishlist click handler
+  document.body.addEventListener('click', function (e) {
+    if (e.target.closest('.wishlist-btn')) {
+      const btn = e.target.closest('.wishlist-btn');
+      const code = btn.getAttribute('data-code');
+      let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+      let added;
+      if (wishlist.includes(code)) {
+        wishlist = wishlist.filter(c => c !== code);
+        added = false;
+      } else {
+        wishlist.push(code);
+        added = true;
+      }
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      updateWishlistUI();
+      showWishlistToast(added ? 'Added to wishlist!' : 'Removed from wishlist');
+    }
+  });
+  // Store productImages for wishlist rendering
+  window.productImagesData = JSON.parse('{{ product_images|tojson|safe }}');
+  updateWishlistUI();
+
+  // Back to top
+  const btn = document.getElementById("backToTop");
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 300) { btn.style.display = "flex"; } else { btn.style.display = "none"; }
+  });
+  btn.onclick = function () { window.scrollTo({ top: 0, behavior: "smooth" }); };
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productImages = JSON.parse('{{ product_images|tojson|safe }}');
+  const category = urlParams.get('category') || localStorage.getItem('activeCategory') || Object.keys(productImages)[0];
+  const btn = document.querySelector('[data-category="' + category + '"]');
+  if (btn) btn.click();
+
+  // Robust image blur removal: run for all images, even if loaded from cache
+  document.querySelectorAll('.product-img').forEach(img => {
+    function removeBlur() { img.classList.add('loaded'); }
+    img.addEventListener('load', removeBlur);
+    if (img.complete) removeBlur();
+  });
 });
 </script>
-
 {% endblock %}
