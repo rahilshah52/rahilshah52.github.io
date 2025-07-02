@@ -489,7 +489,7 @@
       {% for img, label in services %}
       <div class="col-6 col-md-3">
         <a href="/services" style="text-decoration: none; color: inherit;">
-          <div class="card border-0 shadow-sm h-100 p-2 rounded-4">
+          <div class="premium-card border-0 shadow-sm h-100 p-2 rounded-4">
             <img src="{{ url_for('static', filename='images/services/' + img) }}"
             srcset="{{ url_for('static', filename='images/services/' + img) }} 100w, {{ url_for('static', filename='images/services/' + img) }} 200w"
             sizes="(max-width: 600px) 100px, 200px"

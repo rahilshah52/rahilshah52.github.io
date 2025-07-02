@@ -557,7 +557,7 @@ html {
       {% for img, label in services %}
       <div class="col-6 col-md-3">
         <a href="/services" style="text-decoration: none; color: inherit;">
-          <div class="card border-0 shadow-sm h-100 p-2 rounded-4">
+          <div class="premium-card border-0 shadow-sm h-100 p-2 rounded-4">
             <img src="{{ url_for('static', filename='images/services/' + img) }}" class="img-fluid rounded-3 mb-2" alt="{{ label }}">
             <p class="fw-semibold mb-0">{{ label }}</p>
           </div>

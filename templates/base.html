@@ -63,7 +63,56 @@
   });
 </script>
 
-<body>
+
+<style>
+  body.premium-bg {
+    background: linear-gradient(135deg, #f8f5f0 0%, #f3ede2 50%, #f7f3ea 100%) !important;
+    min-height: 100vh;
+  }
+
+  /* Premium Card Style - Global */
+  .premium-card {
+    background: rgba(255, 255, 255, 0.72);
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 24px 0 rgba(60, 60, 60, 0.10), 0 1.5px 6px 0 rgba(180, 180, 180, 0.08);
+    backdrop-filter: blur(8px) saturate(1.2);
+    border: 1.5px solid rgba(230, 220, 200, 0.25);
+    transition: box-shadow 0.2s, transform 0.2s;
+    overflow: hidden;
+  }
+  .premium-card:hover, .premium-card:focus-within {
+    box-shadow: 0 8px 32px 0 rgba(60, 60, 60, 0.16), 0 2px 8px 0 rgba(180, 180, 180, 0.12);
+    transform: translateY(-2px) scale(1.01);
+  }
+  .premium-card .card-body {
+    background: transparent;
+    border: none;
+  }
+  /* Remove default Bootstrap card background for premium cards */
+  .premium-card.card {
+    background: none;
+    border: none;
+  }
+  /* Optional: Make all .card use premium style by default */
+  .card {
+    background: rgba(255,255,255,0.72);
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 24px 0 rgba(60, 60, 60, 0.10), 0 1.5px 6px 0 rgba(180, 180, 180, 0.08);
+    backdrop-filter: blur(8px) saturate(1.2);
+    border: 1.5px solid rgba(230, 220, 200, 0.25);
+    transition: box-shadow 0.2s, transform 0.2s;
+    overflow: hidden;
+  }
+  .card:hover, .card:focus-within {
+    box-shadow: 0 8px 32px 0 rgba(60, 60, 60, 0.16), 0 2px 8px 0 rgba(180, 180, 180, 0.12);
+    transform: translateY(-2px) scale(1.01);
+  }
+  .card .card-body {
+    background: transparent;
+    border: none;
+  }
+</style>
+<body class="premium-bg">
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2">
