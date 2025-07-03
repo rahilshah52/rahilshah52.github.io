@@ -169,6 +169,12 @@ Sent from: Uniglobe Lifestyles Website - Meeting Booking Form
 Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
 """
         try:
+            print("=== MEETING BOOKING EMAIL ===")
+            print(f"Subject: {msg.subject}")
+            print(f"Recipients: {msg.recipients}")
+            print("Body:")
+            print(msg.body)
+            print("=" * 50)
             mail.send(msg)
             flash("Meeting request submitted successfully. We'll contact you to confirm the details.", "success")
         except Exception as e:
@@ -199,6 +205,7 @@ def contact():
 def quotation():
     if request.method == 'POST':
         name = request.form.get('name')
+        company = request.form.get('company')
         email = request.form.get('email')
         phone = request.form.get('phone')
         project = request.form.get('project')
@@ -214,6 +221,7 @@ def quotation():
 
 👤 CLIENT DETAILS:
 Name: {name}
+{f"Company: {company}" if company else "Company: Individual/Not specified"}
 Email: {email}
 Phone: {phone if phone else 'Not provided'}
 
@@ -230,9 +238,15 @@ Project Type/Products: {project if project else 'Not specified'}
 📱 Contact: {phone if phone else 'Email only'}
 
 Sent from: Uniglobe Lifestyles Website - Quotation Request Form
-Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
 """
         try:
+            print("=== QUOTATION EMAIL ===")
+            print(f"Subject: {msg.subject}")
+            print(f"Recipients: {msg.recipients}")
+            print("Body:")
+            print(msg.body)
+            print("=" * 50)
             mail.send(msg)
             flash("Quotation request submitted successfully!", "success")
         except Exception as e:
@@ -407,6 +421,12 @@ Sent from: Uniglobe Lifestyles Website - Product Pricing Form
 Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
 """
         try:
+            print("=== PRODUCT PRICING EMAIL ===")
+            print(f"Subject: {msg.subject}")
+            print(f"Recipients: {msg.recipients}")
+            print("Body:")
+            print(msg.body)
+            print("=" * 50)
             mail.send(msg)
             if is_wishlist:
                 if is_all_wishlist:
@@ -426,6 +446,188 @@ Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
         return redirect(url_for('product_pricing'))
 
     return render_template('product_pricing_form.html')
+
+@app.route('/test-emails')
+def test_emails():
+    """Test route to preview all email templates"""
+    from datetime import datetime, timedelta
+    
+    # Test data
+    test_data = {
+        'name': 'John Doe',
+        'company': 'ABC Architecture Firm',
+        'email': 'john@example.com',
+        'phone': '+91 9876543210',
+        'date': '2025-07-10',
+        'time': '14:00',
+        'location': 'Mumbai Office, Andheri West',
+        'message': 'Looking for furniture for 3BHK apartment',
+        'project': 'Residential Interior Design',
+        'category': 'Bedroom & Beds',
+        'product_desc': 'BD15'
+    }
+    
+    # Format date and time
+    date_obj = datetime.strptime(test_data['date'], '%Y-%m-%d')
+    formatted_date = date_obj.strftime('%d/%m/%Y')
+    time_obj = datetime.strptime(test_data['time'], '%H:%M')
+    formatted_time = time_obj.strftime('%I:%M %p')
+    
+    emails = []
+    
+    # 1. Meeting Booking Email
+    meeting_email = f"""MEETING BOOKING REQUEST
+{"="*50}
+
+📋 CLIENT DETAILS:
+Name: {test_data['name']}
+Email: {test_data['email']}
+Phone: {test_data['phone']}
+
+📅 MEETING DETAILS:
+Preferred Date: {formatted_date}
+Preferred Time: {formatted_time}
+Meeting Location: {test_data['location']}
+
+📝 PROJECT INFORMATION:
+{test_data['message']}
+
+---
+⚠️  ACTION REQUIRED: Please contact the client within 24 hours to confirm meeting details.
+
+📧 Reply to: {test_data['email']}
+📱 Call/WhatsApp: {test_data['phone']}
+
+Sent from: Uniglobe Lifestyles Website - Meeting Booking Form
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+    
+    emails.append(("🗓️ New Meeting Request - Uniglobe Lifestyles", meeting_email))
+    
+    # 2. Quotation Email
+    quotation_email = f"""QUOTATION REQUEST
+{"="*50}
+
+👤 CLIENT DETAILS:
+Name: {test_data['name']}
+Company: {test_data['company']}
+Email: {test_data['email']}
+Phone: {test_data['phone']}
+
+🏗️ PROJECT INFORMATION:
+Project Type/Products: {test_data['project']}
+
+📝 ADDITIONAL DETAILS:
+{test_data['message']}
+
+---
+⚠️  ACTION REQUIRED: Please prepare and send quotation within 2 business days.
+
+📧 Reply to: {test_data['email']}
+📱 Contact: {test_data['phone']}
+
+Sent from: Uniglobe Lifestyles Website - Quotation Request Form
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+    
+    emails.append(("💰 New Quotation Request - Uniglobe Lifestyles", quotation_email))
+    
+    # 3. Product Pricing Email
+    product_email = f"""PRODUCT PRICE INQUIRY
+{"="*50}
+
+👤 CLIENT DETAILS:
+Name: {test_data['name']}
+Email: {test_data['email']}
+
+🛋️ PRODUCT INFORMATION:
+Category: {test_data['category']}
+Product Code/Description: {test_data['product_desc']}
+
+📝 ADDITIONAL REQUIREMENTS:
+{test_data['message']}
+
+---
+⚠️  ACTION REQUIRED: Please provide product pricing and availability within 1 business day.
+
+📧 Reply to: {test_data['email']}
+
+Sent from: Uniglobe Lifestyles Website - Product Pricing Form
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+    
+    emails.append(("🏷️ Product Price Inquiry - Uniglobe Lifestyles", product_email))
+    
+    # 4. Wishlist Email (All Items)
+    wishlist_all = """ALL WISHLIST ITEMS:
+1. BD15 - bedroom
+2. LV8 - living
+3. DG12 - dining
+"""
+    
+    wishlist_email = f"""COMPLETE WISHLIST PRICING REQUEST
+{"="*65}
+
+👤 CLIENT DETAILS:
+Name: {test_data['name']}
+Email: {test_data['email']}
+
+🤍 COMPLETE WISHLIST REQUEST:
+The client wants pricing for ALL items in their wishlist.
+
+📝 ALL WISHLIST ITEMS:
+{wishlist_all.strip()}
+
+📝 ADDITIONAL REQUIREMENTS:
+{test_data['message']}
+
+---
+⚠️  ACTION REQUIRED: 
+- Provide comprehensive pricing for ALL wishlist items
+- Include bulk discount options (10+ items)
+- Consider package deals for multiple categories
+- Respond within 1 business day
+
+📧 Reply to: {test_data['email']}
+
+Sent from: Uniglobe Lifestyles Website - Complete Wishlist Pricing
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+    
+    emails.append(("🤍 Complete Wishlist Pricing - Uniglobe Lifestyles", wishlist_email))
+    
+    # Return HTML page showing all emails
+    html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Email Templates Preview</title>
+        <style>
+            body { font-family: monospace; margin: 20px; }
+            .email { border: 2px solid #ccc; margin: 20px 0; padding: 15px; background: #f9f9f9; }
+            .subject { font-weight: bold; color: #0066cc; margin-bottom: 10px; }
+            .body { white-space: pre-wrap; background: white; padding: 10px; border: 1px solid #ddd; }
+        </style>
+    </head>
+    <body>
+        <h1>Email Templates Preview</h1>
+        <p>These are the email templates that will be sent for each form:</p>
+    """
+    
+    for subject, body in emails:
+        html += f"""
+        <div class="email">
+            <div class="subject">Subject: {subject}</div>
+            <div class="body">{body}</div>
+        </div>
+        """
+    
+    html += """
+    </body>
+    </html>
+    """
+    
+    return html
 
 if __name__ == '__main__':
     app.run(debug=True)
