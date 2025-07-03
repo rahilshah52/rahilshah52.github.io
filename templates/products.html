@@ -60,6 +60,31 @@
   .wishlist-btn.active .wishlist-heart {
     color: #e63946 !important;
   }
+  .mobile-wishlist-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #e63946;
+    color: #e63946;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.2);
+  }
+  .mobile-wishlist-btn:hover, .mobile-wishlist-btn:focus {
+    background: #e63946;
+    color: white !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+    border-color: #e63946;
+  }
+  .mobile-wishlist-btn:active {
+    transform: scale(0.95);
+  }
   .badge { font-size: 0.8em; }
   .skeleton-loader { background: linear-gradient(90deg, #f3f3f3 25%, #ececec 50%, #f3f3f3 75%); background-size: 200% 100%; animation: skeleton 1.2s infinite linear; }
   @keyframes skeleton { 0% {background-position: 200% 0;} 100% {background-position: -200% 0;} }
@@ -108,9 +133,8 @@
     <main class="col-lg-9 col-md-8">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-semibold mb-0">Products</h2>
-        <button class="btn btn-outline-danger d-lg-none d-flex align-items-center gap-2" onclick="switchToCategory('wishlist')" style="border-radius: 20px;">
-          <i class="fas fa-heart"></i>
-          <span class="d-none d-sm-inline">Wishlist</span>
+        <button class="btn d-lg-none mobile-wishlist-btn" onclick="switchToCategory('wishlist')" title="My Wishlist">
+          ♥
         </button>
       </div>
       {% for cat, data in product_images.items() %}

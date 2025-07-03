@@ -118,10 +118,11 @@ def showroom():
         name = request.form.get('name')
         email = request.form.get('email')
         date = request.form.get('date')
+        time = request.form.get('time')  # Added time field
         location = request.form.get('location')
         message = request.form.get('message')
 
-        if not name or not email or not date or not location:
+        if not name or not email or not date or not location or not time:  # Added time to validation
             flash("All fields marked with * are required.", "danger")
             return redirect(url_for('showroom'))
 
@@ -130,8 +131,9 @@ def showroom():
 Name: {name}
 Email: {email}
 Preferred Date: {date}
-Location: {location}
-Message: {message or 'N/A'}
+Preferred Time: {time}
+Showroom Location: {location}
+Message: {message or 'No additional message'}
 """
         try:
             mail.send(msg)
@@ -142,7 +144,7 @@ Message: {message or 'N/A'}
 
         return redirect(url_for('showroom'))
 
-    return render_template('showroom.html', today=today)
+    return render_template('showroom.html', current_date=today, max_date=max_date)
 
 
 @app.route('/blog')
@@ -158,29 +160,29 @@ def contact():
 
         if form_type == 'quote':
             phone = request.form.get('phone')
-            interest = request.form.get('interest')
+            project = request.form.get('project')  # Fixed: was 'interest'
             message = request.form.get('message')
 
             msg = Message("New Quotation Request", recipients=['uniglobelifestyles@gmail.com'])
             msg.body = f"""Quotation Request:
 Name: {name}
 Email: {email}
-Phone: {phone}
-Interests: {interest}
-Message: {message}
+Phone: {phone or 'Not provided'}
+Project Type: {project or 'Not specified'}
+Additional Info: {message or 'None'}
 """
         else:
             category = request.form.get('category')
-            product_code = request.form.get('product_code')
-            product_message = request.form.get('product_message')
+            product_desc = request.form.get('product_desc')  # Fixed: was 'product_code'
+            message = request.form.get('message')  # Fixed: was 'product_message'
 
             msg = Message("Product Price Inquiry", recipients=['uniglobelifestyles@gmail.com'])
             msg.body = f"""Product Inquiry:
 Name: {name}
 Email: {email}
-Category: {category}
-Product Description: {product_code}
-Message: {product_message}
+Category: {category or 'Not specified'}
+Product Description: {product_desc or 'Not provided'}
+Message: {message or 'None'}
 """
 
         try:
