@@ -27,7 +27,39 @@
   }
   .product-card { background: #fff; border: 1px solid #eee; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.10); transition: box-shadow 0.3s, transform 0.3s; padding-bottom: 1rem; }
   .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.16); transform: translateY(-8px) scale(1.025); }
-  .wishlist-btn { position: absolute; top: 0; right: 0; margin: 0.5rem; z-index: 2; }
+  .wishlist-btn { 
+    position: absolute; 
+    top: 0; 
+    right: 0; 
+    margin: 0.5rem; 
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ddd;
+    background: rgba(255, 255, 255, 0.95);
+    transition: all 0.3s ease;
+  }
+  .wishlist-btn:hover {
+    border-color: #e63946;
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+  .wishlist-btn.active {
+    border-color: #e63946;
+    background: rgba(230, 57, 70, 0.1);
+  }
+  .wishlist-heart {
+    font-size: 1.2rem !important;
+    color: #666;
+    transition: color 0.3s ease;
+  }
+  .wishlist-btn.active .wishlist-heart {
+    color: #e63946 !important;
+  }
   .badge { font-size: 0.8em; }
   .skeleton-loader { background: linear-gradient(90deg, #f3f3f3 25%, #ececec 50%, #f3f3f3 75%); background-size: 200% 100%; animation: skeleton 1.2s infinite linear; }
   @keyframes skeleton { 0% {background-position: 200% 0;} 100% {background-position: -200% 0;} }
@@ -92,7 +124,9 @@
             <div class="card h-100 shadow-sm border-0 rounded-4 d-flex flex-column justify-content-between">
               <div class="bg-light d-flex align-items-center justify-content-center rounded-4 position-relative" style="aspect-ratio:1/1; min-height:160px; max-height:220px; overflow:hidden;">
                 <img src="{{ url_for('static', filename='images/' + cat + '/' + item.filename) }}" class="product-img" alt="{{ item.code }}" loading="lazy" style="max-width:95%; max-height:95%; object-fit:contain; background:#f3f3f3; border-radius:14px; cursor:pointer;" onclick="openModal(this.src, '{{ item.code }}')">
-                <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 wishlist-btn" aria-label="Add to wishlist" data-code="{{ item.code }}"><span class="fs-5 wishlist-heart">&#9825;</span></button>
+                <button class="wishlist-btn" aria-label="Add to wishlist" data-code="{{ item.code }}">
+                  <span class="wishlist-heart">&#9825;</span>
+                </button>
               </div>
               <div class="card-body text-center py-3">
                 <div class="fw-semibold small mb-1">{{ item.code }}</div>
@@ -155,6 +189,14 @@ function openModal(src, title) {
 // Category switching for new markup
 const categoryButtons = document.querySelectorAll('[data-category]');
 const categoryGroups = document.querySelectorAll('.category-group');
+
+function switchToCategory(categoryName) {
+  const button = document.querySelector(`[data-category="${categoryName}"]`);
+  if (button) {
+    button.click();
+  }
+}
+
 categoryButtons.forEach(button => {
   button.addEventListener('click', () => {
     const selected = button.getAttribute('data-category');
@@ -183,11 +225,9 @@ function updateWishlistUI() {
     const heart = btn.querySelector('.wishlist-heart');
     if (wishlist.includes(code)) {
       heart.innerHTML = '&#9829;'; // filled heart
-      heart.style.color = '#e63946';
       btn.classList.add('active');
     } else {
       heart.innerHTML = '&#9825;'; // outline heart
-      heart.style.color = '';
       btn.classList.remove('active');
     }
   });
@@ -222,7 +262,9 @@ function renderWishlistProducts() {
       <div class="card h-100 shadow-sm border-0 rounded-4 d-flex flex-column justify-content-between">
         <div class="bg-light d-flex align-items-center justify-content-center rounded-4 position-relative" style="aspect-ratio:1/1; min-height:160px; max-height:220px; overflow:hidden;">
           <img src="/static/images/${item.cat}/${item.filename}" class="product-img" alt="${item.code}" loading="lazy" style="max-width:95%; max-height:95%; object-fit:contain; background:#f3f3f3; border-radius:14px; cursor:pointer;" onclick="openModal(this.src, '${item.code}')">
-          <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 wishlist-btn" aria-label="Add to wishlist" data-code="${item.code}"><span class="fs-5 wishlist-heart">&#9829;</span></button>
+          <button class="wishlist-btn active" aria-label="Remove from wishlist" data-code="${item.code}">
+            <span class="wishlist-heart">&#9829;</span>
+          </button>
         </div>
         <div class="card-body text-center py-3">
           <div class="fw-semibold small mb-1">${item.code}</div>
