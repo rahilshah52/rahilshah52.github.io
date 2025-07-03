@@ -76,7 +76,10 @@
     <main class="col-lg-9 col-md-8">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-semibold mb-0">Products</h2>
-        <button class="btn btn-outline-secondary d-lg-none" onclick="alert('Filter coming soon!')">Filter</button>
+        <button class="btn btn-outline-danger d-lg-none d-flex align-items-center gap-2" onclick="switchToCategory('wishlist')" style="border-radius: 20px;">
+          <i class="fas fa-heart"></i>
+          <span class="d-none d-sm-inline">Wishlist</span>
+        </button>
       </div>
       {% for cat, data in product_images.items() %}
       <div class="category-group w-100{% if not loop.first %} d-none{% endif %}" id="{{ cat }}-section">
