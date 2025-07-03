@@ -113,88 +113,168 @@ def projects():
 @app.route('/showroom', methods=['GET', 'POST'])
 def showroom():
     today = datetime.today().strftime('%Y-%m-%d')  # Get today's date in proper format
+    min_date = (datetime.today() + timedelta(days=2)).strftime('%Y-%m-%d')  # 2 days from today (day after tomorrow)
     max_date = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')  # 30 days from today
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
+        phone = request.form.get('phone')
         date = request.form.get('date')
         time = request.form.get('time')  # Added time field
         location = request.form.get('location')
         message = request.form.get('message')
 
-        if not name or not email or not date or not location or not time:  # Added time to validation
+        if not name or not email or not phone or not date or not location or not time:  # Added phone to validation
             flash("All fields marked with * are required.", "danger")
             return redirect(url_for('showroom'))
 
-        msg = Message("New Showroom Appointment", recipients=['uniglobelifestyles@gmail.com'])
-        msg.body = f"""Showroom Booking Request:
+        msg = Message("🗓️ New Meeting Request - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+        msg.body = f"""MEETING BOOKING REQUEST
+{"="*50}
+
+📋 CLIENT DETAILS:
 Name: {name}
 Email: {email}
+Phone: {phone}
+
+📅 MEETING DETAILS:
 Preferred Date: {date}
 Preferred Time: {time}
-Showroom Location: {location}
-Message: {message or 'No additional message'}
+Meeting Location: {location}
+
+📝 PROJECT INFORMATION:
+{message if message else 'No additional details provided'}
+
+---
+⚠️  ACTION REQUIRED: Please contact the client within 24 hours to confirm meeting details.
+
+📧 Reply to: {email}
+📱 Call/WhatsApp: {phone}
+
+Sent from: Uniglobe Lifestyles Website - Meeting Booking Form
+Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 """
         try:
             mail.send(msg)
-            flash("Appointment request submitted successfully.", "success")
+            flash("Meeting request submitted successfully. We'll contact you to confirm the details.", "success")
         except Exception as e:
             print("Error sending mail:", e)
             flash("Something went wrong while sending the email. Please try again.", "danger")
 
         return redirect(url_for('showroom'))
 
-    return render_template('showroom.html', current_date=today, max_date=max_date)
+    return render_template('showroom.html', current_date=today, min_date=min_date, max_date=max_date)
 
 
 @app.route('/blog')
 def blog():
     return render_template('blog.html')
 
-@app.route('/contact', methods=['GET', 'POST'])
+@app.route('/contact')
 def contact():
+    # Check if there's a form parameter to show specific forms
+    form_type = request.args.get('form')
+    if form_type == 'product':
+        return redirect(url_for('product_pricing'))
+    elif form_type == 'quote':
+        return redirect(url_for('quotation'))
+    
+    return render_template('contact_new.html')
+
+@app.route('/quotation', methods=['GET', 'POST'])
+def quotation():
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
-        form_type = request.form.get('form_type')
+        phone = request.form.get('phone')
+        project = request.form.get('project')
+        message = request.form.get('message')
 
-        if form_type == 'quote':
-            phone = request.form.get('phone')
-            project = request.form.get('project')  # Fixed: was 'interest'
-            message = request.form.get('message')
+        if not name or not email:
+            flash("Name and email are required.", "danger")
+            return redirect(url_for('quotation'))
 
-            msg = Message("New Quotation Request", recipients=['uniglobelifestyles@gmail.com'])
-            msg.body = f"""Quotation Request:
+        msg = Message("💰 New Quotation Request - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+        msg.body = f"""QUOTATION REQUEST
+{"="*50}
+
+👤 CLIENT DETAILS:
 Name: {name}
 Email: {email}
-Phone: {phone or 'Not provided'}
-Project Type: {project or 'Not specified'}
-Additional Info: {message or 'None'}
-"""
-        else:
-            category = request.form.get('category')
-            product_desc = request.form.get('product_desc')  # Fixed: was 'product_code'
-            message = request.form.get('message')  # Fixed: was 'product_message'
+Phone: {phone if phone else 'Not provided'}
 
-            msg = Message("Product Price Inquiry", recipients=['uniglobelifestyles@gmail.com'])
-            msg.body = f"""Product Inquiry:
-Name: {name}
-Email: {email}
-Category: {category or 'Not specified'}
-Product Description: {product_desc or 'Not provided'}
-Message: {message or 'None'}
-"""
+🏗️ PROJECT INFORMATION:
+Project Type/Products: {project if project else 'Not specified'}
 
+📝 ADDITIONAL DETAILS:
+{message if message else 'No additional information provided'}
+
+---
+⚠️  ACTION REQUIRED: Please prepare and send quotation within 2 business days.
+
+📧 Reply to: {email}
+📱 Contact: {phone if phone else 'Email only'}
+
+Sent from: Uniglobe Lifestyles Website - Quotation Request Form
+Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
         try:
             mail.send(msg)
-            flash("Thank you for contacting us!", "success")
+            flash("Quotation request submitted successfully!", "success")
         except Exception as e:
             print("Error sending mail:", e)
-            flash("Failed to send message. Please try again.", "danger")
+            flash("Failed to send request. Please try again.", "danger")
 
-        return redirect(url_for('contact'))
+        return redirect(url_for('quotation'))
 
-    return render_template('contact.html')
+    return render_template('quotation_form.html')
+
+@app.route('/product-pricing', methods=['GET', 'POST'])
+def product_pricing():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        category = request.form.get('category')
+        product_desc = request.form.get('product_desc')
+        message = request.form.get('message')
+
+        if not name or not email:
+            flash("Name and email are required.", "danger")
+            return redirect(url_for('product_pricing'))
+
+        msg = Message("🏷️ Product Price Inquiry - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+        msg.body = f"""PRODUCT PRICE INQUIRY
+{"="*50}
+
+👤 CLIENT DETAILS:
+Name: {name}
+Email: {email}
+
+🛋️ PRODUCT INFORMATION:
+Category: {category if category else 'Not specified'}
+Product Description/Code: {product_desc if product_desc else 'Not provided'}
+
+📝 ADDITIONAL REQUIREMENTS:
+{message if message else 'No additional information provided'}
+
+---
+⚠️  ACTION REQUIRED: Please provide product pricing and availability within 1 business day.
+
+📧 Reply to: {email}
+
+Sent from: Uniglobe Lifestyles Website - Product Pricing Form
+Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        try:
+            mail.send(msg)
+            flash("Product pricing request submitted successfully!", "success")
+        except Exception as e:
+            print("Error sending mail:", e)
+            flash("Failed to send request. Please try again.", "danger")
+
+        return redirect(url_for('product_pricing'))
+
+    return render_template('product_pricing_form.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

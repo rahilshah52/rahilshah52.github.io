@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 py-5">
+  <div class="container p-4 rounded shadow premium-card" style="max-width: 600px;">
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="text-center mb-4">
+      <i class="fas fa-tag fa-3x text-success mb-3"></i>
+      <h2 class="fw-bold">Product Pricing Inquiry</h2>
+      <p class="text-muted">Ask for specific product prices and availability</p>
+    </div>
+
+    <form method="POST">
+      <div class="mb-3">
+        <label class="form-label">Your Name*</label>
+        <input type="text" name="name" class="form-control" required placeholder="John Doe">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email*</label>
+        <input type="email" name="email" class="form-control" required placeholder="you@example.com">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="">Select Category</option>
+          <option value="Bedroom & Beds">Bedroom & Beds</option>
+          <option value="Sofa & Lounge Seating">Sofa & Lounge Seating</option>
+          <option value="Dining & Coffee Tables">Dining & Coffee Tables</option>
+          <option value="Modular Furniture">Modular Furniture</option>
+          <option value="Lighting & Fixtures">Lighting & Fixtures</option>
+          <option value="Sanitaryware">Sanitaryware</option>
+          <option value="Premium Collection">Premium Collection</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Product Description or Code</label>
+        <input type="text" name="product_desc" class="form-control" placeholder="Product code (e.g., BD15) or description">
+        <small class="text-muted">You can find product codes on our products page</small>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Additional Information</label>
+        <textarea name="message" class="form-control" rows="3" placeholder="Quantity needed, preferred dimensions, color preferences, etc."></textarea>
+      </div>
+      <button type="submit" class="btn btn-success w-100">
+        <i class="fas fa-search me-2"></i>Request Product Price
+      </button>
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="text-muted mb-2">Need help finding products?</p>
+      <a href="/products" class="btn btn-link">Browse Products</a>
+      <span class="mx-2">|</span>
+      <a href="/contact" class="btn btn-link">← Back to Contact</a>
+      <span class="mx-2">|</span>
+      <a href="https://wa.me/+919821524612" target="_blank" class="btn btn-link">
+        <i class="fab fa-whatsapp me-1"></i>Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

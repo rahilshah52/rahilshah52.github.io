@@ -64,23 +64,25 @@
 <div class="container py-5">
 
   <div class="text-center mb-5">
-    <h1 class="mb-3">Visit Our Showroom in Mumbai or Foshan</h1>
-    <p class="fs-5">Experience the quality firsthand. Explore our curated displays of luxury furniture, lighting, and decor solutions tailored to global tastes.</p>
+    <h1 class="mb-3">Schedule a Meeting</h1>
+    <p class="fs-5">Let us come to you! We'll meet at your preferred location with samples, catalogs, and personalized recommendations to discuss your project.</p>
   </div>
 
   <div class="row mb-5">
     <div class="col-md-6">
-      <div class="border p-4 rounded shadow-sm h-100">
-        <h4 class="mb-2">Mumbai Showroom</h4>
-        <p><strong>Address:</strong> 123, Design Street, Andheri West, Mumbai, India</p>
-        <p><strong>Timings:</strong> Mon–Sat: 10am to 6pm</p>
+      <div class="premium-card border p-4 rounded shadow-sm h-100">
+        <h4 class="mb-2"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Mumbai & Western India</h4>
+        <p><strong>Service Areas:</strong> Mumbai, Pune, Ahmedabad, Surat & surrounding regions</p>
+        <p><strong>Meeting Hours:</strong> Mon–Sat: 10am to 6pm</p>
+        <p class="text-muted small">Same-day meetings available within Mumbai</p>
       </div>
     </div>
     <div class="col-md-6 mt-4 mt-md-0">
-      <div class="border p-4 rounded shadow-sm h-100">
-        <h4 class="mb-2">Foshan Showroom</h4>
-        <p><strong>Address:</strong> Block B, Furniture Plaza, Foshan, China</p>
-        <p><strong>Timings:</strong> Mon–Sat: 9am to 5pm</p>
+      <div class="premium-card border p-4 rounded shadow-sm h-100">
+        <h4 class="mb-2"><i class="fas fa-globe-asia me-2 text-primary"></i>International Clients</h4>
+        <p><strong>Video Consultations:</strong> Available worldwide via video call</p>
+        <p><strong>Sample Dispatch:</strong> Express shipping of material samples</p>
+        <p class="text-muted small">In-person meetings can be arranged in Foshan, China</p>
       </div>
     </div>
   </div>
@@ -97,8 +99,8 @@
   {% endwith %}
 
   <div class="text-center mb-4">
-    <h2 class="fw-semibold">Book an Appointment</h2>
-    <p class="text-muted">For further inquiries, feel free to contact us directly via WhatsApp or email below.</p>
+    <h2 class="fw-semibold">Book a Meeting</h2>
+    <p class="text-muted">Schedule a personal consultation at your preferred location - office, home, or any convenient place.</p>
   </div>
 
   <div class="row justify-content-center">
@@ -113,16 +115,19 @@
           <input type="email" name="email" class="form-control" required placeholder="you@example.com">
         </div>
         <div class="mb-3">
-          <label class="form-label">Preferred Showroom*</label>
-          <select name="location" class="form-select" required>
-            <option selected disabled>Choose Showroom</option>
-            <option>Mumbai</option>
-            <option>Foshan</option>
-          </select>
+          <label class="form-label">Phone Number*</label>
+          <input type="tel" name="phone" class="form-control" required placeholder="+91 98765 43210">
+          <small class="text-muted">Required for meeting coordination and confirmation</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Meeting Location*</label>
+          <input type="text" name="location" class="form-control" required placeholder="Your office, home, or preferred meeting place">
+          <small class="text-muted">Please provide complete address including city and pincode</small>
         </div>
         <div class="mb-3">
           <label class="form-label">Select Date*</label>
-          <input type="date" name="date" class="form-control" required min="{{ current_date }}" max="{{ max_date }}">
+          <input type="date" name="date" class="form-control" required min="{{ min_date }}" max="{{ max_date }}">
+          <small class="text-muted">Meetings can be scheduled starting from day after tomorrow</small>
         </div>
         <div class="mb-3">
           <label class="form-label">Preferred Time*</label>
@@ -141,10 +146,10 @@
           </select>
         </div>
         <div class="mb-3">
-          <label class="form-label">Message (Optional)</label>
-          <textarea name="message" class="form-control" rows="3" placeholder="Any specific products you want to see?"></textarea>
+          <label class="form-label">Project Details (Optional)</label>
+          <textarea name="message" class="form-control" rows="3" placeholder="Brief about your project, space type, budget range, or specific requirements"></textarea>
         </div>
-        <button type="submit" class="btn btn-dark w-100">Request Appointment</button>
+        <button type="submit" class="btn btn-dark w-100">Schedule Meeting</button>
       </form>
     </div>
   </div>

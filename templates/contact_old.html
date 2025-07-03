@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-center min-vh-100 py-5">
+  <div class="container p-4 rounded shadow" style="max-width: 700px; background-color: #ffffff; border: 1px solid #ccc;">
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2 class="text-center mb-3 fw-bold">Let’s Help You Better</h2>
+    <p class="text-center text-muted mb-4">Choose your request type and fill in your details.</p>
+
+    <ul class="nav nav-pills nav-justified mb-4" id="formTabs" role="tablist">
+      <li class="nav-item">
+        <button class="nav-link active" id="quote-tab" data-bs-toggle="pill" data-bs-target="#quote" type="button" role="tab">🧾 Get a Quotation</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" id="product-tab" data-bs-toggle="pill" data-bs-target="#product" type="button" role="tab">🛋️ Ask for Product Price</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Quotation Form -->
+      <div class="tab-pane fade show active" id="quote" role="tabpanel">
+        <form method="POST">
+          <input type="hidden" name="form_type" value="quote">
+          <div class="mb-3">
+            <label class="form-label">Your Name*</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email*</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" name="phone" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Project Type or Products Interested In</label>
+            <input type="text" name="project" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Additional Info</label>
+            <textarea name="message" class="form-control" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-dark w-100">Send Quotation Request</button>
+        </form>
+      </div>
+
+      <!-- Product Price Form -->
+      <div class="tab-pane fade" id="product" role="tabpanel">
+        <form method="POST">
+          <input type="hidden" name="form_type" value="product">
+          <div class="mb-3">
+            <label class="form-label">Your Name*</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email*</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select name="category" class="form-select">
+              <option>Living Room</option>
+              <option>Bedroom</option>
+              <option>Lighting</option>
+              <option>Tiles</option>
+              <option>Sanitaryware</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Product Description or Code</label>
+            <input type="text" name="product_desc" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message (Optional)</label>
+            <textarea name="message" class="form-control" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-dark w-100">Request Product Price</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
