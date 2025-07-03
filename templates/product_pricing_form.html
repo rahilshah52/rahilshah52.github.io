@@ -32,8 +32,9 @@
       </div>
       <div class="mb-3">
         <label class="form-label">Category</label>
-        <select name="category" class="form-select">
+        <select name="category" class="form-select" id="categorySelect">
           <option value="">Select Category</option>
+          <option value="My Wishlist">🤍 My Wishlist</option>
           <option value="Bedroom & Beds">Bedroom & Beds</option>
           <option value="Sofa & Lounge Seating">Sofa & Lounge Seating</option>
           <option value="Dining & Coffee Tables">Dining & Coffee Tables</option>
@@ -43,9 +44,12 @@
           <option value="Premium Collection">Premium Collection</option>
         </select>
       </div>
-      <div class="mb-3">
+      <div class="mb-3" id="productDescField">
         <label class="form-label">Product Description or Code</label>
-        <input type="text" name="product_desc" class="form-control" placeholder="Product code (e.g., BD15) or description">
+        <select name="product_desc" class="form-select" id="productDescSelect" style="display: none;">
+          <option value="">Select Product Code</option>
+        </select>
+        <input type="text" name="product_desc_text" class="form-control" placeholder="Product code (e.g., BD15) or description" id="productDescInput">
         <small class="text-muted">You can find product codes on our products page</small>
       </div>
       <div class="mb-3">
@@ -69,5 +73,171 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('categorySelect');
+    const productDescInput = document.getElementById('productDescInput');
+    const productDescSelect = document.getElementById('productDescSelect');
+    const productDescField = document.getElementById('productDescField');
+    
+    // Product codes for each category (matching the backend logic)
+    const productCodes = {
+        'Bedroom & Beds': generateCodes('BD', 25),
+        'Sofa & Lounge Seating': generateCodes('LV', 20),
+        'Dining & Coffee Tables': generateCodes('DG', 20),
+        'Modular Furniture': generateCodes('MC', 20),
+        'Lighting & Fixtures': generateCodes('LG', 20),
+        'Sanitaryware': generateCodes('SW', 20),
+        'Premium Collection': generateCodes('PC', 20)
+    };
+    
+    function generateCodes(prefix, count) {
+        const codes = [];
+        for (let i = 1; i <= count; i++) {
+            codes.push(`${prefix}${i}`);
+        }
+        return codes;
+    }
+    
+    categorySelect.addEventListener('change', function() {
+        const selectedCategory = this.value;
+        
+        if (selectedCategory === 'My Wishlist') {
+            // Handle wishlist selection
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            
+            if (wishlist.length === 0) {
+                alert('Your wishlist is empty. Please add some products to your wishlist first.');
+                this.value = '';
+                return;
+            }
+            
+            // Show dropdown with wishlist options
+            productDescSelect.style.display = 'block';
+            productDescInput.style.display = 'none';
+            
+            // Clear and populate dropdown with wishlist options
+            productDescSelect.innerHTML = '<option value="">Select Option</option>';
+            productDescSelect.innerHTML += '<option value="all_wishlist_items">All Wishlist Items</option>';
+            
+            // Add individual wishlist items
+            wishlist.forEach((item, index) => {
+                productDescSelect.innerHTML += `<option value="${item.code}">${item.code} - ${item.category}</option>`;
+            });
+            
+            // Update labels
+            const label = productDescField.querySelector('label');
+            const helpText = productDescField.querySelector('small');
+            label.textContent = 'Select Wishlist Items';
+            helpText.textContent = `Choose specific items or select "All Wishlist Items" for comprehensive pricing`;
+            
+        } else if (selectedCategory && productCodes[selectedCategory]) {
+            // Handle regular category selection
+            productDescSelect.style.display = 'block';
+            productDescInput.style.display = 'none';
+            
+            // Clear and populate dropdown with category codes
+            productDescSelect.innerHTML = '<option value="">Select Product Code</option>';
+            productDescSelect.innerHTML += '<option value="general_inquiry">General Category Inquiry</option>';
+            
+            productCodes[selectedCategory].forEach(code => {
+                productDescSelect.innerHTML += `<option value="${code}">${code}</option>`;
+            });
+            
+            // Update labels
+            const label = productDescField.querySelector('label');
+            const helpText = productDescField.querySelector('small');
+            label.textContent = 'Select Product Code';
+            helpText.textContent = `Choose a specific product code or "General Category Inquiry" for category-wide pricing`;
+            
+        } else {
+            // No category selected or empty selection
+            productDescSelect.style.display = 'none';
+            productDescInput.style.display = 'block';
+            productDescInput.value = '';
+            productDescInput.readOnly = false;
+            productDescInput.placeholder = 'Product code (e.g., BD15) or description';
+            
+            // Reset labels
+            const label = productDescField.querySelector('label');
+            const helpText = productDescField.querySelector('small');
+            label.textContent = 'Product Description or Code';
+            helpText.textContent = 'You can find product codes on our products page';
+        }
+    });
+    
+    // Handle form submission to ensure the right field is submitted
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const categoryValue = categorySelect.value;
+        
+        if (categoryValue === 'My Wishlist') {
+            const selectedOption = productDescSelect.value;
+            
+            if (selectedOption === 'all_wishlist_items') {
+                // Get all wishlist items and format them
+                const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+                let wishlistText = 'ALL WISHLIST ITEMS:\n';
+                wishlist.forEach((item, index) => {
+                    wishlistText += `${index + 1}. ${item.code} - ${item.category}\n`;
+                });
+                
+                // Create a hidden input with the formatted wishlist
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'product_desc';
+                hiddenInput.value = wishlistText;
+                form.appendChild(hiddenInput);
+                
+                // Disable the select to prevent double submission
+                productDescSelect.disabled = true;
+                
+            } else if (selectedOption) {
+                // Specific wishlist item selected
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'product_desc';
+                hiddenInput.value = `WISHLIST ITEM: ${selectedOption}`;
+                form.appendChild(hiddenInput);
+                
+                productDescSelect.disabled = true;
+            } else {
+                e.preventDefault();
+                alert('Please select an option from your wishlist.');
+                return;
+            }
+            
+        } else if (categoryValue && productDescSelect.style.display === 'block') {
+            // Regular category with dropdown
+            if (!productDescSelect.value) {
+                e.preventDefault();
+                alert('Please select a product code or inquiry type.');
+                return;
+            }
+            
+            // Create hidden input with selected value
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'product_desc';
+            hiddenInput.value = productDescSelect.value === 'general_inquiry' 
+                ? `General inquiry for ${categoryValue} category`
+                : productDescSelect.value;
+            form.appendChild(hiddenInput);
+            
+            productDescSelect.disabled = true;
+        } else {
+            // Text input mode
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'product_desc';
+            hiddenInput.value = productDescInput.value;
+            form.appendChild(hiddenInput);
+            
+            productDescInput.disabled = true;
+        }
+    });
+});
+</script>
 
 {% endblock %}

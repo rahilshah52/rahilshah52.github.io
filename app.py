@@ -114,7 +114,7 @@ def projects():
 def showroom():
     today = datetime.today().strftime('%Y-%m-%d')  # Get today's date in proper format
     min_date = (datetime.today() + timedelta(days=2)).strftime('%Y-%m-%d')  # 2 days from today (day after tomorrow)
-    max_date = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')  # 30 days from today
+    max_date = (datetime.today() + timedelta(days=180)).strftime('%Y-%m-%d')  # 6 months (180 days) from today
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
@@ -128,6 +128,20 @@ def showroom():
             flash("All fields marked with * are required.", "danger")
             return redirect(url_for('showroom'))
 
+        # Format the date for display (convert from YYYY-MM-DD to DD/MM/YYYY)
+        try:
+            date_obj = datetime.strptime(date, '%Y-%m-%d')
+            formatted_date = date_obj.strftime('%d/%m/%Y')
+        except:
+            formatted_date = date  # fallback to original if parsing fails
+
+        # Format the time for display (convert 24hr to 12hr with AM/PM)
+        try:
+            time_obj = datetime.strptime(time, '%H:%M')
+            formatted_time = time_obj.strftime('%I:%M %p')
+        except:
+            formatted_time = time  # fallback to original if parsing fails
+
         msg = Message("🗓️ New Meeting Request - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
         msg.body = f"""MEETING BOOKING REQUEST
 {"="*50}
@@ -138,8 +152,8 @@ Email: {email}
 Phone: {phone}
 
 📅 MEETING DETAILS:
-Preferred Date: {date}
-Preferred Time: {time}
+Preferred Date: {formatted_date}
+Preferred Time: {formatted_time}
 Meeting Location: {location}
 
 📝 PROJECT INFORMATION:
@@ -152,7 +166,7 @@ Meeting Location: {location}
 📱 Call/WhatsApp: {phone}
 
 Sent from: Uniglobe Lifestyles Website - Meeting Booking Form
-Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
 """
         try:
             mail.send(msg)
@@ -235,15 +249,142 @@ def product_pricing():
         name = request.form.get('name')
         email = request.form.get('email')
         category = request.form.get('category')
-        product_desc = request.form.get('product_desc')
+        product_desc = request.form.get('product_desc')  # This will come from hidden input
         message = request.form.get('message')
 
         if not name or not email:
             flash("Name and email are required.", "danger")
             return redirect(url_for('product_pricing'))
 
-        msg = Message("🏷️ Product Price Inquiry - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
-        msg.body = f"""PRODUCT PRICE INQUIRY
+        # Check if this is a wishlist request
+        is_wishlist = category == 'My Wishlist'
+        is_all_wishlist = product_desc and 'ALL WISHLIST ITEMS:' in product_desc
+        is_single_wishlist = product_desc and 'WISHLIST ITEM:' in product_desc
+        
+        if is_wishlist:
+            if is_all_wishlist:
+                # All wishlist items request
+                msg = Message("🤍 Complete Wishlist Pricing - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+                msg.body = f"""COMPLETE WISHLIST PRICING REQUEST
+{"="*65}
+
+👤 CLIENT DETAILS:
+Name: {name}
+Email: {email}
+
+🤍 COMPLETE WISHLIST REQUEST:
+The client wants pricing for ALL items in their wishlist.
+
+📝 ALL WISHLIST ITEMS:
+{product_desc.replace('ALL WISHLIST ITEMS:', '').strip() if product_desc else 'Items not properly loaded'}
+
+📝 ADDITIONAL REQUIREMENTS:
+{message if message else 'No additional information provided'}
+
+---
+⚠️  ACTION REQUIRED: 
+- Provide comprehensive pricing for ALL wishlist items
+- Include bulk discount options (10+ items)
+- Consider package deals for multiple categories
+- Respond within 1 business day
+
+� Reply to: {email}
+
+Sent from: Uniglobe Lifestyles Website - Complete Wishlist Pricing
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+            elif is_single_wishlist:
+                # Single wishlist item request
+                selected_item = product_desc.replace('WISHLIST ITEM:', '').strip()
+                msg = Message("🤍 Wishlist Item Pricing - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+                msg.body = f"""WISHLIST ITEM PRICING REQUEST
+{"="*60}
+
+👤 CLIENT DETAILS:
+Name: {name}
+Email: {email}
+
+🤍 SPECIFIC WISHLIST ITEM:
+Product Code: {selected_item}
+(Selected from client's wishlist)
+
+📝 ADDITIONAL REQUIREMENTS:
+{message if message else 'No additional information provided'}
+
+---
+⚠️  ACTION REQUIRED: 
+- Provide detailed pricing for the selected item
+- Include quantity-based pricing if applicable
+- Suggest related products from their wishlist
+- Respond within 1 business day
+
+📧 Reply to: {email}
+
+Sent from: Uniglobe Lifestyles Website - Wishlist Item Pricing
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+            else:
+                # Fallback for other wishlist cases
+                msg = Message("🤍 Wishlist Price Inquiry - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+                msg.body = f"""WISHLIST PRICE INQUIRY
+{"="*60}
+
+👤 CLIENT DETAILS:
+Name: {name}
+Email: {email}
+
+🤍 WISHLIST REQUEST:
+{product_desc if product_desc else 'Wishlist items not properly loaded'}
+
+📝 ADDITIONAL REQUIREMENTS:
+{message if message else 'No additional information provided'}
+
+---
+⚠️  ACTION REQUIRED: Please provide pricing for the requested wishlist items within 1 business day.
+
+📧 Reply to: {email}
+
+Sent from: Uniglobe Lifestyles Website - Wishlist Pricing Request
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+        else:
+            # Regular product inquiry
+            is_general_inquiry = product_desc and 'General inquiry for' in product_desc
+            
+            if is_general_inquiry:
+                # Category-wide inquiry
+                msg = Message("📋 Category Pricing Inquiry - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+                msg.body = f"""CATEGORY PRICING INQUIRY
+{"="*55}
+
+👤 CLIENT DETAILS:
+Name: {name}
+Email: {email}
+
+📋 CATEGORY INQUIRY:
+{product_desc}
+
+The client is interested in general pricing information for this entire category.
+
+📝 ADDITIONAL REQUIREMENTS:
+{message if message else 'No additional information provided'}
+
+---
+⚠️  ACTION REQUIRED: 
+- Provide category overview with price ranges
+- Include popular items in this category
+- Suggest bestsellers and featured products
+- Respond within 1 business day
+
+📧 Reply to: {email}
+
+Sent from: Uniglobe Lifestyles Website - Category Pricing Inquiry
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
+"""
+            else:
+                # Specific product inquiry
+                msg = Message("🏷️ Product Price Inquiry - Uniglobe Lifestyles", recipients=['uniglobelifestyles@gmail.com'])
+                msg.body = f"""PRODUCT PRICE INQUIRY
 {"="*50}
 
 👤 CLIENT DETAILS:
@@ -252,7 +393,7 @@ Email: {email}
 
 🛋️ PRODUCT INFORMATION:
 Category: {category if category else 'Not specified'}
-Product Description/Code: {product_desc if product_desc else 'Not provided'}
+Product Code/Description: {product_desc if product_desc else 'Not provided'}
 
 📝 ADDITIONAL REQUIREMENTS:
 {message if message else 'No additional information provided'}
@@ -263,11 +404,21 @@ Product Description/Code: {product_desc if product_desc else 'Not provided'}
 📧 Reply to: {email}
 
 Sent from: Uniglobe Lifestyles Website - Product Pricing Form
-Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Time: {datetime.now().strftime('%d/%m/%Y %I:%M %p')}
 """
         try:
             mail.send(msg)
-            flash("Product pricing request submitted successfully!", "success")
+            if is_wishlist:
+                if is_all_wishlist:
+                    flash("Complete wishlist pricing request submitted! We'll send you detailed pricing for all your wishlist items with bulk discounts.", "success")
+                elif is_single_wishlist:
+                    flash("Wishlist item pricing request submitted! We'll send you detailed pricing for the selected item.", "success")
+                else:
+                    flash("Wishlist pricing request submitted successfully!", "success")
+            elif product_desc and 'General inquiry for' in product_desc:
+                flash("Category pricing inquiry submitted! We'll send you comprehensive information about this category.", "success")
+            else:
+                flash("Product pricing request submitted successfully!", "success")
         except Exception as e:
             print("Error sending mail:", e)
             flash("Failed to send request. Please try again.", "danger")
